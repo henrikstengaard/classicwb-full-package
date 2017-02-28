@@ -1,0 +1,851 @@
+;Install ClassicWB
+;-----------------
+;FULL ADV ADVSP P96
+
+echo ""
+echo ""
+echo "-------------------------------------------"
+echo "You'll need a valid Workbench 3.0/3.1 disk,"
+echo "without one the install will fail."
+echo ""
+echo "Vital and copyright files contained on the"
+echo "disk will be copied during installation."
+echo ""
+echo "This is required because Workbench is still"
+echo "sold commercially."
+echo ""
+echo "The copyright holders can be found at:"
+echo "http://amigaforever.com"
+echo "-------------------------------------------"
+echo ""
+ask "Press RETURN to continue."
+
+resident SYS:C/cls PURE
+
+cls
+echo ""
+echo "Welcome to Bloodwych's ClassicWB Install!"
+echo ""
+echo "In a moment you will be prompted to insert your Workbench"
+echo "disk. It's used to verify and extract copyright files."
+echo ""
+echo "Please note that the ClassicWB installs cannot operate"
+echo "without these files."
+echo ""
+ask "Press RETURN to begin."
+
+cls
+
+LAB START
+
+cls
+
+echo ""
+echo "Please Insert a Workbench 3.0 disk into DF0:"
+echo ""
+echo "A Workbench 3.1 disk can also be used, allowing"
+echo "the option of a complete upgrade to 3.1"
+echo ""
+ask "Insert disk and press RETURN to continue."
+
+IF NOT EXISTS DF0:C/Which
+  SKIP FAIL
+ENDIF
+
+IF NOT EXISTS DF0:C/Assign
+  SKIP FAIL
+ELSE
+  DF0:C/Assign >NIL: T: RAM:
+ENDIF
+
+IF "`DF0:C/Which DF0:`" EQ "Workbench3.0:"
+  echo ""
+  echo ""
+  echo "Disk appears to be Workbench 3.0 release."
+  echo ""
+  echo "Checking version number..." NOLINE
+  DF0:C/Wait 1
+  DF0:C/Version >NIL: DF0:Libs/version.library 39 FILE
+  IF WARN
+    echo "INCORRECT!"
+    SKIP SECOND
+  ELSE
+    echo "CORRECT!"
+    SKIP PASS
+  ENDIF
+  echo ""
+ENDIF
+
+LAB SECOND
+
+IF "`DF0:C/Which DF0:`" EQ "Workbench3.1:"
+  echo ""
+  echo ""
+  echo "Disk appears to be Workbench 3.1 release."
+  echo ""
+  echo "Checking version number..." NOLINE
+  DF0:C/Wait 1
+  DF0:C/Version >NIL: DF0:Libs/version.library 39 FILE
+  IF WARN
+    echo "INCORRECT!"
+    SKIP FAIL
+  ELSE
+    echo "CORRECT!"
+    SKIP INSTALL
+  ENDIF
+  echo ""
+ENDIF
+
+LAB FAIL
+
+echo ""
+echo ""
+echo "This is not a valid Workbench disk"
+echo ""
+echo "...installation cannot continue."
+echo ""
+ask "Press RETURN to try again."
+SKIP START BACK
+
+LAB INSTALL
+
+stack 16384
+failat 21
+DF0:C/AddBuffers >NIL: DF0: 200
+resident DF0:C/Copy PURE
+resident DF0:C/Delete PURE
+resident DF0:C/Execute PURE
+resident DF0:C/Wait PURE
+
+echo ""
+echo "Workbench 3.1 detected, launching upgrade options..."
+wait 4
+
+cls
+
+echo ""
+echo "ClassicWB can be completely upgraded to Workbench 3.1"
+echo "if the full set of 3.1 disks are available."
+echo ""
+echo "If not, the current Workbench disk will be used to"
+echo "activate the system, but parts will remain at 3.0"
+echo ""
+ask "Do you want to upgrade to Workbench 3.1?"
+
+IF NOT WARN
+  SKIP PASS
+ELSE
+  echo ""
+  echo "Valid Workbench disk found!"
+  wait 4
+
+  cls
+
+  echo ""
+  echo "Installing ClassicWB..."
+  wait 4
+
+  cls
+
+  echo ""
+  echo "Activating system using Workbench disks, please wait..."
+  wait 4
+
+  execute SYS:S/Activate
+  cd SYS:
+  delete >NIL: SYS:S/Activate
+
+  IF EXISTS SYS:C/LoadWB.temp
+    copy DF0:C/LoadWB SYS:C/LoadWB.orig CLONE
+  ELSE
+    copy DF0:C/LoadWB SYS:C/LoadWB CLONE
+  ENDIF
+
+  copy SYS:T/Science SYS:S CLONE
+  delete >NIL: SYS:T/Science
+  delete >NIL: SYS:S/startup-sequence
+  rename SYS:S/Science SYS:S/Startup-Sequence
+
+  IF EXISTS SYS:C/LoadWB.temp
+    rename SYS:C/LoadWB.temp SYS:C/LoadWB
+  ENDIF
+
+  execute SYS:S/Workbench3.1
+  execute SYS:S/Extras3.1
+  execute SYS:S/Fonts3.1
+  execute SYS:S/Install3.1
+  execute SYS:S/Locale3.1
+  execute SYS:S/Storage3.1
+  
+  delete >NIL: SYS:S/Workbench3.1
+  delete >NIL: SYS:S/Extras3.1
+  delete >NIL: SYS:S/Fonts3.1
+  delete >NIL: SYS:S/Install3.1
+  delete >NIL: SYS:S/Locale3.1
+  delete >NIL: SYS:S/Storage3.1
+ENDIF
+
+wait 4
+SKIP OPTIONS
+
+LAB PASS
+
+stack 16384
+failat 21
+DF0:C/AddBuffers >NIL: DF0: 200
+resident DF0:C/Copy PURE
+resident DF0:C/Delete PURE
+resident DF0:C/Execute PURE
+resident DF0:C/Wait PURE
+
+echo ""
+echo "Valid Workbench disk found!"
+wait 4
+
+cls
+
+echo ""
+echo "Installing ClassicWB..."
+wait 4
+
+cls
+
+echo ""
+echo "Activating system using Workbench disk, please wait..."
+wait 4
+
+execute SYS:S/Activate
+cd SYS:
+delete >NIL: SYS:S/Activate
+
+IF EXISTS SYS:C/LoadWB.temp
+  copy DF0:C/LoadWB SYS:C/LoadWB.orig CLONE
+ELSE
+  copy DF0:C/LoadWB SYS:C/LoadWB CLONE
+ENDIF
+
+copy SYS:T/Science SYS:S CLONE
+delete >NIL: SYS:T/Science
+delete >NIL: SYS:S/startup-sequence
+rename SYS:S/Science SYS:S/Startup-Sequence
+
+IF EXISTS SYS:C/LoadWB.temp
+  rename SYS:C/LoadWB.temp SYS:C/LoadWB
+ENDIF
+
+delete >NIL: SYS:S/Workbench3.1
+delete >NIL: SYS:S/Extras3.1
+delete >NIL: SYS:S/Install3.1
+delete >NIL: SYS:S/Storage3.1
+delete >NIL: SYS:S/Locale3.1
+
+IF EXISTS SYS:T/z
+  delete >NIL: SYS:T/z
+EndIF
+IF EXISTS SYS:T/zz
+  delete >NIL: SYS:T/zz
+EndIF
+
+copy SYS:MyFiles/Install/Icons/Startup-Sequence30 SYS:MyFiles/Install/Icons/Enable/S/Startup-Sequence CLONE
+
+wait 4
+
+LAB OPTIONS
+
+  cd SYS:
+  C:MakeDir RAM:T RAM:Clipboards RAM:ENV RAM:ENV/Sys
+  copy >NIL: ENVARC: RAM:ENV ALL NOREQ
+  C:Assign >NIL: ENV: RAM:ENV
+  C:Protect FONTS:#? +RWED ALL QUIET
+  SYS:System/FixFonts
+
+LAB IGAME
+
+IF EXISTS SYS:Temp/igame.zip
+  cls
+  echo ""
+  echo "iGame Artwork:"
+  echo "--------------"
+  echo ""
+  echo "The packs come with a list launcher and Zetro's low mem"
+  echo "AGLaunch for WHDLoad Games/Demos and Other programs."
+  echo ""
+  echo "iGame is also available for WHDLoad titles."
+  echo ""
+  echo "Artwork can be installed for iGame, at the expense of"
+  echo "approximately 20MB of hard drive space."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP PALETTE
+EndIF
+
+C:Requestchoice >ENV:Choice "iGame Artwork""Choose:""Install""Remove"
+
+IF $Choice EQ "1"
+  SKIP INSTALL
+ENDIF
+IF $Choice EQ "0"
+  SKIP REMOVE
+ENDIF
+
+LAB INSTALL
+
+  cls
+  echo ""
+  echo "Installing... this will take some time!"
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/igame.zip -d SYS:Games
+  echo ""
+  echo "iGame support installed."
+  echo ""
+  delete >NIL: SYS:Temp/igame.zip
+  ask "Press RETURN to continue."
+  SKIP PALETTE
+
+LAB REMOVE
+
+  delete >NIL: SYS:Temp/igame.zip
+  wait 2
+
+LAB PALETTE
+
+IF EXISTS SYS:Temp/palette.zip
+  cls
+  echo ""
+  echo "ClassicWB can run in faster but limited 16 colour screenmode"
+  echo "or with Higher Colours. For 16 colours choose a palette:"
+  echo "" 
+  echo "ClassicWB default Palette"
+  echo "-------------------------"
+  echo "The packs come with a default fixed 16 colour Palette"
+  echo "based on Rebel's and Cammy's work. This Palette has been"
+  echo "created to keep the original ClassicWB theme intact whilst"
+  echo "maintaining excellent performance for applications, icons"
+  echo "and background wallpapers."
+  echo "Enable this palette if you want the same Workbench shown on"
+  echo "ClassicWB webpage - abime.classicwb.net."
+  echo ""
+  echo "Rebel's optimized Palette"
+  echo "-------------------------"
+  echo "Rebel's original Palette is available, offering the very best"
+  echo "16 colour palette for general use. Window borders and icons"
+  echo "will not adhere to the original ClassicWB theme, using custom"
+  echo "colours, however everything will be interlaced/MagicTV"
+  echo "friendly and 16 colour images will look optimal."
+  echo "Choose this theme if you intend customizing Workbench's look,"
+  echo "run in interlaced or using Rebel's and Cammy's icons,"
+  echo "borders and wallpapers."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP THEME
+EndIF
+
+C:Requestchoice >ENV:Choice "Choose Palette""Choose:""Default 16""Optimized 16""Higher Colours"
+
+IF $Choice EQ "1"
+  SKIP DEFAULT
+ENDIF
+IF $Choice EQ "2"
+  SKIP OPTIMIZED
+ENDIF
+IF $Choice EQ "0"
+  SKIP HICOLOUR
+ENDIF
+
+LAB DEFAULT
+
+  delete >NIL: SYS:Temp/palette.zip
+  delete >NIL: SYS:Temp/hicolour.zip
+  SETENV default 1
+  wait 2
+  SKIP THEME
+
+LAB OPTIMIZED
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/palette.zip -d SYS:
+  echo ""
+  echo "Optimized Palette installed."
+  echo ""
+  delete >NIL: SYS:Temp/hicolour.zip
+  delete >NIL: SYS:Temp/palette.zip
+  SETENV default 2
+  ask "Press RETURN to continue."
+  SKIP THEME
+
+LAB HICOLOUR
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/hicolour.zip -d SYS:
+  echo ""
+  echo "High Colour Palette installed."
+  echo ""
+  delete >NIL: SYS:Temp/palette.zip
+  delete >NIL: SYS:Temp/hicolour.zip
+  SETENV default 3
+  ask "Press RETURN to continue."
+
+LAB THEME
+
+IF EXISTS SYS:Temp/retro.zip
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "Choose Theme:"
+  echo "-------------"
+  echo ""
+  echo "None/Original Theme"
+  echo "-------------------"
+  echo "- Default Workbench appearance"
+  echo "- No wallpaper"
+  echo "- Copper effect applied to backdrop"
+  echo "- Same as shown on main Webpage - abime.classicwb.net"
+  echo ""
+  echo "Retro and Re-Gen Theme"
+  echo "----------------------"
+  echo "- Customized appearance"
+  echo "- Wallpaper included"
+  echo "- Borderless Icons"
+  echo "- Copper effect applied to windows and applications"
+ELSE
+  SKIP OLDICONS
+EndIF
+
+C:Requestchoice >ENV:Choice "Choose Theme""Choose:""None""Retro""Re-Gen"
+
+IF $Choice EQ "1"
+  SKIP NONE
+ENDIF
+IF $Choice EQ "2"
+  SKIP RETRO
+ENDIF
+IF $Choice EQ "0"
+  SKIP REGEN
+ENDIF
+
+LAB NONE
+
+  delete >NIL: SYS:Temp/retro.zip
+  delete >NIL: SYS:Temp/regen.zip
+  delete >NIL: SYS:Temp/default.zip
+  delete >NIL: SYS:Temp/defaultregen.zip
+  delete >NIL: SYS:Temp/defaultretro.zip
+  delete >NIL: SYS:Temp/optimized.zip
+  wait 2
+  SKIP OLDICONS
+
+LAB RETRO
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/retro.zip -d SYS:
+  echo ""
+  echo "Retro Theme installed."
+  echo ""
+  IF $default EQ 1
+    unzip >NIL: -o SYS:Temp/default.zip -d SYS:
+  EndIF
+  IF $default EQ 2
+    unzip >NIL: -o SYS:Temp/optimized.zip -d SYS:
+  EndIF
+  IF $default EQ 3
+    unzip >NIL: -o SYS:Temp/defaultretro.zip -d SYS:
+  EndIF
+  delete >NIL: SYS:Temp/retro.zip
+  delete >NIL: SYS:Temp/regen.zip
+  delete >NIL: SYS:Temp/default.zip
+  delete >NIL: SYS:Temp/defaultregen.zip
+  delete >NIL: SYS:Temp/defaultretro.zip
+  delete >NIL: SYS:Temp/optimized.zip
+  delete >NIL: SYS:Temp/oldicons.zip
+  copy SYS:Prefs/Env-Archive/Scalos/Scalos.prefs SYS:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  ask "Press RETURN to continue."
+  SKIP OLDICONS
+
+LAB REGEN
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/regen.zip -d SYS:
+  echo ""
+  echo "Re-Gen Theme installed."
+  echo "" 
+  IF $default EQ 1
+    unzip >NIL: -o SYS:Temp/default.zip -d SYS:
+  EndIF
+  IF $default EQ 2
+    unzip >NIL: -o SYS:Temp/optimized.zip -d SYS:
+  EndIF
+  IF $default EQ 3
+    unzip >NIL: -o SYS:Temp/defaultregen.zip -d SYS:
+  EndIF
+  delete >NIL: SYS:Temp/retro.zip
+  delete >NIL: SYS:Temp/regen.zip
+  delete >NIL: SYS:Temp/default.zip
+  delete >NIL: SYS:Temp/defaultregen.zip
+  delete >NIL: SYS:Temp/defaultretro.zip
+  delete >NIL: SYS:Temp/optimized.zip
+  delete >NIL: SYS:Temp/oldicons.zip
+  copy SYS:Prefs/Env-Archive/Scalos/Scalos.prefs SYS:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  ask "Press RETURN to continue."
+
+LAB OLDICONS
+
+IF EXISTS SYS:Temp/oldicons.zip
+  cls
+  echo ""
+  echo "Old Look Icons:"
+  echo "---------------"
+  echo ""
+  echo "If you prefer the look of borderless icons, like those"
+  echo "found in Workbench 1.3, then this allows the old look"
+  echo "to return to Workbench 3."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Scalos Prefs menu, adding values to Icon Border."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP COPPER
+EndIF
+
+C:Requestchoice >ENV:Choice "OldIcons""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  unzip >NIL: -o SYS:Temp/oldicons.zip -d SYS:
+  echo ""
+  echo "OldIcon support installed."
+  echo ""
+  delete >NIL: SYS:Temp/oldicons.zip
+  copy SYS:Prefs/Env-Archive/Scalos/Scalos.prefs SYS:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  ask "Press RETURN to continue."
+  SKIP COPPER
+
+LAB DISABLE
+
+  delete >NIL: SYS:Temp/oldicons.zip
+  wait 2
+
+LAB COPPER
+
+IF EXISTS SYS:C/Copper_enable
+  cls
+  echo ""
+  echo "AGA Copper backgrounds"
+  echo "----------------------"
+  echo ""
+  echo "AGA users are treated with the ability to run a high"
+  echo "colour Copper background."
+  echo ""
+  echo "If you chose the ClassicWB default Theme, it will be"
+  echo "used as the background wallpaper."
+  echo ""
+  echo "Users who selected the custom Themes with wallpaper"
+  echo "will have the Copper effect applied to the background"
+  echo "of windows and applications."
+  echo ""
+  echo "This can be Enabled or Disabled at anytime from the"
+  echo "Settings and Tools menus. The effect can be locked to"
+  echo "any one colour using preferences."
+  echo ""
+  echo "ECS users need to disable this option."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP BORDER
+EndIF
+
+C:Requestchoice >ENV:Choice "Copper Background""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  execute >NIL: SYS:Temp/Copper_enable
+  echo ""
+  echo "Copper support installed."
+  echo ""
+  delete >NIL: SYS:Temp/Copper_enable
+  delete >NIL: SYS:Temp/BorderBlank_enable
+  ask "Press RETURN to continue."
+  SKIP BORDER
+
+LAB DISABLE
+
+  delete >NIL: SYS:Temp/Copper_enable
+  wait 2
+
+LAB BORDER
+
+IF EXISTS SYS:Temp/BorderBlank_enable
+  cls
+  echo ""
+  echo "Black Border:"
+  echo "-------------"
+  echo ""
+  echo "Workbench normally has a matching border surround. This"
+  echo "can be changed to a black border."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP STACK
+EndIF
+
+C:Requestchoice >ENV:Choice "BlackBorder""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  execute SYS:Temp/BorderBlank_enable
+  echo ""
+  echo "Black Border support installed."
+  echo ""
+  delete >NIL: SYS:Temp/BorderBlank_enable
+  ask "Press RETURN to continue."
+  SKIP STACK
+
+LAB DISABLE
+
+  delete >NIL: SYS:Temp/BorderBlank_enable
+  wait 2
+
+LAB STACK
+
+IF EXISTS SYS:Temp/StackAttack_enable
+  cls
+  echo ""
+  echo "StackAttack:"
+  echo "------------"
+  echo ""
+  echo "ClassicWB already has stack settings that are larger"
+  echo "than default in certain cases to improve stability."
+  echo ""
+  echo "StackAttack makes sure that all processes are launched"
+  echo "with a pre-defined minimum stack to improve stability"
+  echo "in certain situations, with the downside of using a"
+  echo "little extra RAM."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP ANTICLICK
+EndIF
+
+C:Requestchoice >ENV:Choice "StackAttack""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  wait 4
+  execute SYS:Temp/StackAttack_enable
+  echo ""
+  echo "StackAttack support installed."
+  echo ""
+  delete >NIL: SYS:Temp/StackAttack_enable
+  ask "Press RETURN to continue."
+  SKIP ANTICLICK
+
+LAB DISABLE
+
+  delete >NIL: SYS:Temp/StackAttack_enable
+  wait 2
+ 
+LAB ANTICLICK
+
+IF EXISTS SYS:Temp/AntiClick_disable
+  cls
+  echo ""
+  echo "AntiClick"
+  echo "---------"
+  echo ""
+  echo "Constant floppy drive clicking can either be nostalgic"
+  echo "or annoying. This patch prevents the constant clicking"
+  echo "in Workbench."
+  echo ""
+  echo "If you drive continues to click after enabling this"
+  echo "patch, please disable it immediately as your drive is"
+  echo "incompatible."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu." 
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP FREEWHEEL
+EndIF
+
+C:Requestchoice >ENV:Choice "AntiClick""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  delete >NIL: SYS:Temp/AntiClick_disable
+  wait 2
+  SKIP FREEWHEEL
+
+LAB DISABLE
+
+  cls
+  echo ""
+  echo "Removing..."
+  echo ""
+  wait 4
+  execute SYS:Temp/AntiClick_disable
+  echo ""
+  echo "AntiClick support removed."
+  echo ""
+  delete >NIL: SYS:Temp/AntiClick_disable
+  ask "Press RETURN to continue."
+
+LAB FREEWHEEL
+
+IF EXISTS SYS:Temp/FreeWheel_disable
+  cls
+  echo ""
+  echo "FreeWheel"
+  echo "---------"
+  echo ""
+  echo "FreeWheel allows you to scroll windows using a middle"
+  echo "mouse button and map functions to a scroll wheel mouse."
+  echo ""
+  echo "It also provides Click-To-Front on windows so you dont"
+  echo "have to search for the depth gadget."
+  echo ""
+  echo "It is not a serial mouse driver however such as NewMouse."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP END
+EndIF
+
+C:Requestchoice >ENV:Choice "FreeWheel""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  delete >NIL: SYS:Temp/FreeWheel_disable
+  wait 2
+  SKIP END
+
+LAB DISABLE
+
+  cls
+  echo ""
+  echo "Removing..."
+  echo ""
+  wait 4
+  execute SYS:Temp/FreeWheel_disable
+  echo ""
+  echo "FreeWheel support removed."
+  echo ""
+  delete >NIL: SYS:Temp/FreeWheel_disable
+  ask "Press RETURN to continue."
+
+LAB END
+
+wait 2
+cls
+
+echo ""
+echo "Installation Complete!"
+echo ""
+echo "Check the website documentation for details of the"
+echo "multiboot and multi-partition features, large HD >4GB"
+echo "support and how to add WHDLoad games."
+echo ""
+echo "The MyFiles/Install drawer contains many useful addons"
+echo "including PeterKs PNG OS35+ Icon Support, SFS, Network"
+echo "CDROM drivers and more."
+echo ""
+echo "Also check out the Settings->Components menu to access"
+echo "more options like ENV Handler, BlazeWPC, IconBeFast,"
+echo "TinyMeter, TagLiFE, PatchRAM and StickyRMB."
+echo ""
+ask "Please remove the Workbench disk and reboot."
+
+SKIP END BACK

@@ -1,0 +1,9 @@
+IF EXISTS SYSTEMDIR:WBStartup/Copper
+  SKIP QUIT
+ELSE
+  IF EXISTS SYSTEMDIR:C/BorderBlank_disabled
+    Rename SYSTEMDIR:C/BorderBlank_disabled SYSTEMDIR:C/BorderBlank
+  ELSE
+  EndIF
+EndIF
+LAB QUIT

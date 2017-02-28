@@ -1,0 +1,671 @@
+; ClassicWB FULL v28 Package Install Script
+; -----------------------------------------
+;
+; Author: Henrik Noerfjand Stengaard 
+; Date: 2017-02-28
+;
+; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
+; With permission from Bloodwych it's been converted to a package for HstWB Installer.
+; Original version of ClassicWB FULL can be downloaded from http://classicwb.abime.net/.
+; The install script is based on S/Startup-Sequence from System.hdf with following changes:
+; - Removed Workbench installation.
+; - Paths has been changed: SYS: to SYSTEMDIR:, C: to SYSTEMDIR:C/, L: to SYSTEMDIR:L/.
+; - Modified versions of Temp enable and disable option scripts with changed paths.
+; - Removed all "press enter to continue" expect last one used after installation complete message is shown.
+; - Removed and reduced waits.
+; - Adjusted text spacing.
+
+
+; Extract classicwb full v28 zip to systemdir
+echo "Installing ClassicWB FULL v28..." 
+unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
+
+; ClassicWB installation from S/Startup-Sequence
+copy SYSTEMDIR:T/Science SYSTEMDIR:S CLONE
+delete >NIL: SYSTEMDIR:T/Science
+delete >NIL: SYSTEMDIR:S/startup-sequence
+rename SYSTEMDIR:S/Science SYSTEMDIR:S/Startup-Sequence
+
+IF EXISTS SYSTEMDIR:C/LoadWB.temp
+  rename SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
+ENDIF
+
+delete >NIL: SYSTEMDIR:S/Workbench3.1
+delete >NIL: SYSTEMDIR:S/Extras3.1
+delete >NIL: SYSTEMDIR:S/Install3.1
+delete >NIL: SYSTEMDIR:S/Storage3.1
+delete >NIL: SYSTEMDIR:S/Locale3.1
+
+IF EXISTS SYSTEMDIR:T/z
+  delete >NIL: SYSTEMDIR:T/z
+EndIF
+IF EXISTS SYSTEMDIR:T/zz
+  delete >NIL: SYSTEMDIR:T/zz
+EndIF
+
+copy SYSTEMDIR:System/IconLib/S/Startup-Sequence30 SYSTEMDIR:System/IconLib/S/Startup-Sequence CLONE
+
+wait 2
+
+LAB OPTIONS
+
+  cd SYSTEMDIR:
+  ;C:MakeDir RAM:T RAM:Clipboards RAM:ENV RAM:ENV/Sys
+  copy >NIL: SYSTEMDIR:Prefs/Env-Archive RAM:ENV ALL NOREQ
+  Assign >NIL: ENV: RAM:ENV
+  Protect FONTS:#? +RWED ALL QUIET
+  SYSTEMDIR:System/FixFonts
+
+LAB IGAME
+
+IF EXISTS SYSTEMDIR:Temp/igame.zip
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "iGame Artwork:"
+  echo "--------------"
+  echo ""
+  echo "The packs come with a list launcher and Zetro's low mem"
+  echo "AGLaunch for WHDLoad Games/Demos and Other programs."
+  echo ""
+  echo "iGame is also available for WHDLoad titles."
+  echo ""
+  echo "Artwork can be installed for iGame, at the expense of"
+  echo "approximately 20MB of hard drive space."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP PALETTE
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "iGame Artwork""Choose:""Install""Remove"
+
+IF $Choice EQ "1"
+  SKIP INSTALL
+ENDIF
+IF $Choice EQ "0"
+  SKIP REMOVE
+ENDIF
+
+LAB INSTALL
+
+  cls
+  echo ""
+  echo "Installing... this will take some time!"
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/igame.zip -d SYSTEMDIR:Games
+  echo ""
+  echo "iGame support installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/igame.zip
+  wait 2
+  SKIP PALETTE
+
+LAB REMOVE
+
+  delete >NIL: SYSTEMDIR:Temp/igame.zip
+  wait 2
+
+LAB PALETTE
+
+IF EXISTS SYSTEMDIR:Temp/palette.zip
+  cls
+  echo ""
+  echo "ClassicWB can run in faster but limited 16 colour screenmode"
+  echo "or with Higher Colours. For 16 colours choose a palette:"
+  echo "" 
+  echo "ClassicWB default Palette"
+  echo "-------------------------"
+  echo "The packs come with a default fixed 16 colour Palette"
+  echo "based on Rebel's and Cammy's work. This Palette has been"
+  echo "created to keep the original ClassicWB theme intact whilst"
+  echo "maintaining excellent performance for applications, icons"
+  echo "and background wallpapers."
+  echo "Enable this palette if you want the same Workbench shown on"
+  echo "ClassicWB webpage - abime.classicwb.net."
+  echo ""
+  echo "Rebel's optimized Palette"
+  echo "-------------------------"
+  echo "Rebel's original Palette is available, offering the very best"
+  echo "16 colour palette for general use. Window borders and icons"
+  echo "will not adhere to the original ClassicWB theme, using custom"
+  echo "colours, however everything will be interlaced/MagicTV"
+  echo "friendly and 16 colour images will look optimal."
+  echo "Choose this theme if you intend customizing Workbench's look,"
+  echo "run in interlaced or using Rebel's and Cammy's icons,"
+  echo "borders and wallpapers."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP THEME
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "Choose Palette""Choose:""Default 16""Optimized 16""Higher Colours"
+
+IF $Choice EQ "1"
+  SKIP DEFAULT
+ENDIF
+IF $Choice EQ "2"
+  SKIP OPTIMIZED
+ENDIF
+IF $Choice EQ "0"
+  SKIP HICOLOUR
+ENDIF
+
+LAB DEFAULT
+
+  delete >NIL: SYSTEMDIR:Temp/palette.zip
+  delete >NIL: SYSTEMDIR:Temp/hicolour.zip
+  SETENV default 1
+  wait 2
+  SKIP THEME
+
+LAB OPTIMIZED
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/palette.zip -d SYS:
+  echo ""
+  echo "Optimized Palette installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/hicolour.zip
+  delete >NIL: SYSTEMDIR:Temp/palette.zip
+  SETENV default 2
+  wait 2
+  SKIP THEME
+
+LAB HICOLOUR
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/hicolour.zip -d SYS:
+  echo ""
+  echo "High Colour Palette installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/palette.zip
+  delete >NIL: SYSTEMDIR:Temp/hicolour.zip
+  SETENV default 3
+  wait 2
+
+LAB THEME
+
+IF EXISTS SYSTEMDIR:Temp/retro.zip
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "Choose Theme:"
+  echo "-------------"
+  echo ""
+  echo "None/Original Theme"
+  echo "-------------------"
+  echo "- Default Workbench appearance"
+  echo "- No wallpaper"
+  echo "- Copper effect applied to backdrop"
+  echo "- Same as shown on main Webpage - abime.classicwb.net"
+  echo ""
+  echo "Retro and Re-Gen Theme"
+  echo "----------------------"
+  echo "- Customized appearance"
+  echo "- Wallpaper included"
+  echo "- Borderless Icons"
+  echo "- Copper effect applied to windows and applications"
+ELSE
+  SKIP OLDICONS
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "Choose Theme""Choose:""None""Retro""Re-Gen"
+
+IF $Choice EQ "1"
+  SKIP NONE
+ENDIF
+IF $Choice EQ "2"
+  SKIP RETRO
+ENDIF
+IF $Choice EQ "0"
+  SKIP REGEN
+ENDIF
+
+LAB NONE
+
+  delete >NIL: SYSTEMDIR:Temp/retro.zip
+  delete >NIL: SYSTEMDIR:Temp/regen.zip
+  delete >NIL: SYSTEMDIR:Temp/default.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultregen.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
+  delete >NIL: SYSTEMDIR:Temp/optimized.zip
+  wait 2
+  SKIP OLDICONS
+
+LAB RETRO
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/retro.zip -d SYS:
+  echo ""
+  echo "Retro Theme installed."
+  echo ""
+  IF $default EQ 1
+    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYS:
+  EndIF
+  IF $default EQ 2
+    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYS:
+  EndIF
+  IF $default EQ 3
+    unzip >NIL: -o SYSTEMDIR:Temp/defaultretro.zip -d SYS:
+  EndIF
+  delete >NIL: SYSTEMDIR:Temp/retro.zip
+  delete >NIL: SYSTEMDIR:Temp/regen.zip
+  delete >NIL: SYSTEMDIR:Temp/default.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultregen.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
+  delete >NIL: SYSTEMDIR:Temp/optimized.zip
+  delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+  copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  wait 2
+  SKIP OLDICONS
+
+LAB REGEN
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/regen.zip -d SYS:
+  echo ""
+  echo "Re-Gen Theme installed."
+  echo "" 
+  IF $default EQ 1
+    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYS:
+  EndIF
+  IF $default EQ 2
+    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYS:
+  EndIF
+  IF $default EQ 3
+    unzip >NIL: -o SYSTEMDIR:Temp/defaultregen.zip -d SYS:
+  EndIF
+  delete >NIL: SYSTEMDIR:Temp/retro.zip
+  delete >NIL: SYSTEMDIR:Temp/regen.zip
+  delete >NIL: SYSTEMDIR:Temp/default.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultregen.zip
+  delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
+  delete >NIL: SYSTEMDIR:Temp/optimized.zip
+  delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+  copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  wait 2
+
+LAB OLDICONS
+
+IF EXISTS SYSTEMDIR:Temp/oldicons.zip
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "Old Look Icons:"
+  echo "---------------"
+  echo ""
+  echo "If you prefer the look of borderless icons, like those"
+  echo "found in Workbench 1.3, then this allows the old look"
+  echo "to return to Workbench 3."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Scalos Prefs menu, adding values to Icon Border."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP COPPER
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "OldIcons""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  unzip >NIL: -o SYSTEMDIR:Temp/oldicons.zip -d SYS:
+  echo ""
+  echo "OldIcon support installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+  copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+  wait 2
+  SKIP COPPER
+
+LAB DISABLE
+
+  delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+  wait 2
+
+LAB COPPER
+
+IF EXISTS SYSTEMDIR:C/Copper_enable
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "AGA Copper backgrounds"
+  echo "----------------------"
+  echo ""
+  echo "AGA users are treated with the ability to run a high"
+  echo "colour Copper background."
+  echo ""
+  echo "If you chose the ClassicWB default Theme, it will be"
+  echo "used as the background wallpaper."
+  echo ""
+  echo "Users who selected the custom Themes with wallpaper"
+  echo "will have the Copper effect applied to the background"
+  echo "of windows and applications."
+  echo ""
+  echo "This can be Enabled or Disabled at anytime from the"
+  echo "Settings and Tools menus. The effect can be locked to"
+  echo "any one colour using preferences."
+  echo ""
+  echo "ECS users need to disable this option."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP BORDER
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "Copper Background""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  execute >NIL: SYSTEMDIR:Temp/Copper_enable
+  echo ""
+  echo "Copper support installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/Copper_enable
+  delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
+  wait 2
+  SKIP BORDER
+
+LAB DISABLE
+
+  delete >NIL: SYSTEMDIR:Temp/Copper_enable
+  wait 2
+
+LAB BORDER
+
+IF EXISTS SYS:Temp/BorderBlank_enable
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "Black Border:"
+  echo "-------------"
+  echo ""
+  echo "Workbench normally has a matching border surround. This"
+  echo "can be changed to a black border."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP STACK
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "BlackBorder""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  execute SYSTEMDIR:Temp/BorderBlank_enable
+  echo ""
+  echo "Black Border support installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
+  wait 2
+  SKIP STACK
+
+LAB DISABLE
+
+  delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
+  wait 2
+
+LAB STACK
+
+IF EXISTS SYSTEMDIR:Temp/StackAttack_enable
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "StackAttack:"
+  echo "------------"
+  echo ""
+  echo "ClassicWB already has stack settings that are larger"
+  echo "than default in certain cases to improve stability."
+  echo ""
+  echo "StackAttack makes sure that all processes are launched"
+  echo "with a pre-defined minimum stack to improve stability"
+  echo "in certain situations, with the downside of using a"
+  echo "little extra RAM."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP ANTICLICK
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "StackAttack""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  cls
+  echo ""
+  echo "Installing..."
+  echo ""
+  execute SYSTEMDIR:Temp/StackAttack_enable
+  echo ""
+  echo "StackAttack support installed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
+  wait 2
+  SKIP ANTICLICK
+
+LAB DISABLE
+
+  delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
+  wait 2
+ 
+LAB ANTICLICK
+
+IF EXISTS SYSTEMDIR:Temp/AntiClick_disable
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "AntiClick"
+  echo "---------"
+  echo ""
+  echo "Constant floppy drive clicking can either be nostalgic"
+  echo "or annoying. This patch prevents the constant clicking"
+  echo "in Workbench."
+  echo ""
+  echo "If you drive continues to click after enabling this"
+  echo "patch, please disable it immediately as your drive is"
+  echo "incompatible."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu." 
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP FREEWHEEL
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "AntiClick""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  delete >NIL: SYSTEMDIR:Temp/AntiClick_disable
+  wait 2
+  SKIP FREEWHEEL
+
+LAB DISABLE
+
+  cls
+  echo ""
+  echo "Removing..."
+  echo ""
+  execute SYSTEMDIR:Temp/AntiClick_disable
+  echo ""
+  echo "AntiClick support removed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/AntiClick_disable
+  wait 2
+
+LAB FREEWHEEL
+
+IF EXISTS SYSTEMDIR:Temp/FreeWheel_disable
+  cls
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo ""
+  echo "FreeWheel"
+  echo "---------"
+  echo ""
+  echo "FreeWheel allows you to scroll windows using a middle"
+  echo "mouse button and map functions to a scroll wheel mouse."
+  echo ""
+  echo "It also provides Click-To-Front on windows so you dont"
+  echo "have to search for the depth gadget."
+  echo ""
+  echo "It is not a serial mouse driver however such as NewMouse."
+  echo ""
+  echo "This option can be enabled/disabled at anytime via the"
+  echo "Settings->Components menu."
+  echo ""
+  ask "Press RETURN to choose."
+ELSE
+  SKIP END
+EndIF
+
+SYSTEMDIR:C/Requestchoice >ENV:Choice "FreeWheel""Choose:""Enable""Disable"
+
+IF $Choice EQ "1"
+  SKIP ENABLE
+ENDIF
+IF $Choice EQ "0"
+  SKIP DISABLE
+ENDIF
+
+LAB ENABLE
+
+  delete >NIL: SYSTEMDIR:Temp/FreeWheel_disable
+  wait 2
+  SKIP END
+
+LAB DISABLE
+
+  cls
+  echo ""
+  echo "Removing..."
+  echo ""
+  execute SYSTEMDIR:Temp/FreeWheel_disable
+  echo ""
+  echo "FreeWheel support removed."
+  echo ""
+  delete >NIL: SYSTEMDIR:Temp/FreeWheel_disable
+  wait 2
+
+LAB END
+
+wait 2
+cls
+
+echo ""
+echo "Installation Complete!"
+echo ""
+echo "Check the website documentation for details of the"
+echo "multiboot and multi-partition features, large HD >4GB"
+echo "support and how to add WHDLoad games."
+echo ""
+echo "The MyFiles/Install drawer contains many useful addons"
+echo "including PeterKs PNG OS35+ Icon Support, SFS, Network"
+echo "CDROM drivers and more."
+echo ""
+echo "Also check out the Settings->Components menu to access"
+echo "more options like ENV Handler, BlazeWPC, IconBeFast,"
+echo "TinyMeter, TagLiFE, PatchRAM and StickyRMB."
+echo ""
+ask "Press RETURN to continue."
+cls

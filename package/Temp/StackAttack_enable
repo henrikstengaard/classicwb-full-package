@@ -1,0 +1,4 @@
+IF EXISTS SYSTEMDIR:C/StackAttack_disabled
+  Rename SYSTEMDIR:C/StackAttack_disabled SYSTEMDIR:C/StackAttack
+ELSE
+EndIF

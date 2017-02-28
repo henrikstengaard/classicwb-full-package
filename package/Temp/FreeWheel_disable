@@ -1,0 +1,12 @@
+IF EXISTS SYSTEMDIR:WBStartup/FreeWheel
+  SYSTEMDIR:System/FWheel/Enable
+  Copy SYSTEMDIR:WBStartup/FreeWheel WBStartup
+  Copy SYSTEMDIR:WBStartup/FreeWheel.info WBStartup
+  IF EXISTS SYSTEMDIR:WBStartup/FreeWheel.cfg
+    Copy SYSTEMDIR:WBStartup/FreeWheel.cfg WBStartup
+    Delete >NIL: SYSTEMDIR:WBStartup/FreeWheel.cfg
+  EndIF
+  Delete >NIL: SYSTEMDIR:WBStartup/FreeWheel
+  Delete >NIL: SYSTEMDIR:WBStartup/FreeWheel.info
+ELSE
+EndIF
