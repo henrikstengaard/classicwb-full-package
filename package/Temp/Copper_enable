@@ -1,10 +1,10 @@
 IF NOT EXISTS SYSTEMDIR:WBStartup/Copper
   SYSTEMDIR:System/Copper/Disable
-  Copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Pattern.prefs SYSTEMDIR:Prefs/Env-Archive/Scalos/Pattern.prefs
-  Copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Palette.prefs SYSTEMDIR:Prefs/Env-Archive/Scalos/Palette.prefs
-  Copy SYSTEMDIR:Prefs/Env-Archive/PopupMenu.cfg SYSTEMDIR:Prefs/Env-Archive/PopupMenu.cfg
-  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/wbconfig.prefs SYSTEMDIR:Prefs/Env-Archive/Sys/wbconfig.prefs
-  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/font.prefs SYSTEMDIR:Prefs/Env-Archive/Sys/font.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Pattern.prefs Prefs/Env-Archive/Scalos/Pattern.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Palette.prefs Prefs/Env-Archive/Scalos/Palette.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/PopupMenu.cfg Prefs/Env-Archive/PopupMenu.cfg
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/wbconfig.prefs Prefs/Env-Archive/Sys/wbconfig.prefs
+  Copy SYSTEMDIR:Prefs/Env-Archive/Sys/font.prefs Prefs/Env-Archive/Sys/font.prefs
   SYSTEMDIR:System/Copper/Enable
   Copy >NIL:  #? SYS: ALL
   IF EXISTS SYSTEMDIR:C/BorderBlank

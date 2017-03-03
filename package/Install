@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2017-02-28
+; Date: 2017-03-03
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -17,17 +17,20 @@
 
 
 ; Extract classicwb full v28 zip to systemdir
-echo "Installing ClassicWB FULL v28..." 
+echo "Installing ClassicWB FULL..." 
 unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
 
-; ClassicWB installation from S/Startup-Sequence
+
+; Install ClassicWB from S/Startup-Sequence
+; FULL ADV ADVSP P96 
 copy SYSTEMDIR:T/Science SYSTEMDIR:S CLONE
 delete >NIL: SYSTEMDIR:T/Science
 delete >NIL: SYSTEMDIR:S/startup-sequence
 rename SYSTEMDIR:S/Science SYSTEMDIR:S/Startup-Sequence
 
 IF EXISTS SYSTEMDIR:C/LoadWB.temp
-  rename SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
+  copy >NIL: SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
+  delete >NIL: SYSTEMDIR:C/LoadWB.temp
 ENDIF
 
 delete >NIL: SYSTEMDIR:S/Workbench3.1
@@ -43,9 +46,9 @@ IF EXISTS SYSTEMDIR:T/zz
   delete >NIL: SYSTEMDIR:T/zz
 EndIF
 
-copy SYSTEMDIR:System/IconLib/S/Startup-Sequence30 SYSTEMDIR:System/IconLib/S/Startup-Sequence CLONE
-
-wait 2
+IF EXISTS SYSTEMDIR:System/IconLib/S/Startup-Sequence30
+  copy SYSTEMDIR:System/IconLib/S/Startup-Sequence30 SYSTEMDIR:System/IconLib/S/Startup-Sequence CLONE
+ENDIF
 
 LAB OPTIONS
 
@@ -76,8 +79,6 @@ IF EXISTS SYSTEMDIR:Temp/igame.zip
   echo ""
   echo "Artwork can be installed for iGame, at the expense of"
   echo "approximately 20MB of hard drive space."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP PALETTE
 EndIF
@@ -102,13 +103,12 @@ LAB INSTALL
   echo "iGame support installed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/igame.zip
-  wait 2
+  wait 1
   SKIP PALETTE
 
 LAB REMOVE
 
   delete >NIL: SYSTEMDIR:Temp/igame.zip
-  wait 2
 
 LAB PALETTE
 
@@ -138,8 +138,6 @@ IF EXISTS SYSTEMDIR:Temp/palette.zip
   echo "Choose this theme if you intend customizing Workbench's look,"
   echo "run in interlaced or using Rebel's and Cammy's icons,"
   echo "borders and wallpapers."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP THEME
 EndIF
@@ -161,7 +159,6 @@ LAB DEFAULT
   delete >NIL: SYSTEMDIR:Temp/palette.zip
   delete >NIL: SYSTEMDIR:Temp/hicolour.zip
   SETENV default 1
-  wait 2
   SKIP THEME
 
 LAB OPTIMIZED
@@ -177,7 +174,7 @@ LAB OPTIMIZED
   delete >NIL: SYSTEMDIR:Temp/hicolour.zip
   delete >NIL: SYSTEMDIR:Temp/palette.zip
   SETENV default 2
-  wait 2
+  wait 1
   SKIP THEME
 
 LAB HICOLOUR
@@ -193,7 +190,7 @@ LAB HICOLOUR
   delete >NIL: SYSTEMDIR:Temp/palette.zip
   delete >NIL: SYSTEMDIR:Temp/hicolour.zip
   SETENV default 3
-  wait 2
+  wait 1
 
 LAB THEME
 
@@ -245,7 +242,6 @@ LAB NONE
   delete >NIL: SYSTEMDIR:Temp/defaultregen.zip
   delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
   delete >NIL: SYSTEMDIR:Temp/optimized.zip
-  wait 2
   SKIP OLDICONS
 
 LAB RETRO
@@ -275,7 +271,7 @@ LAB RETRO
   delete >NIL: SYSTEMDIR:Temp/optimized.zip
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
-  wait 2
+  wait 1
   SKIP OLDICONS
 
 LAB REGEN
@@ -305,7 +301,7 @@ LAB REGEN
   delete >NIL: SYSTEMDIR:Temp/optimized.zip
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
-  wait 2
+  wait 1
 
 LAB OLDICONS
 
@@ -326,8 +322,6 @@ IF EXISTS SYSTEMDIR:Temp/oldicons.zip
   echo ""
   echo "This option can be enabled/disabled at anytime via the"
   echo "Settings->Scalos Prefs menu, adding values to Icon Border."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP COPPER
 EndIF
@@ -353,13 +347,12 @@ LAB ENABLE
   echo ""
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
-  wait 2
+  wait 1
   SKIP COPPER
 
 LAB DISABLE
 
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
-  wait 2
 
 LAB COPPER
 
@@ -389,8 +382,6 @@ IF EXISTS SYSTEMDIR:C/Copper_enable
   echo "any one colour using preferences."
   echo ""
   echo "ECS users need to disable this option."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP BORDER
 EndIF
@@ -410,19 +401,18 @@ LAB ENABLE
   echo ""
   echo "Installing..."
   echo ""
-  execute >NIL: SYSTEMDIR:Temp/Copper_enable
+  execute >NIL: PACKAGEDIR:Temp/Copper_enable
   echo ""
   echo "Copper support installed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/Copper_enable
   delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
-  wait 2
+  wait 1
   SKIP BORDER
 
 LAB DISABLE
 
   delete >NIL: SYSTEMDIR:Temp/Copper_enable
-  wait 2
 
 LAB BORDER
 
@@ -442,8 +432,6 @@ IF EXISTS SYS:Temp/BorderBlank_enable
   echo ""
   echo "This option can be enabled/disabled at anytime via the"
   echo "Settings->Components menu."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP STACK
 EndIF
@@ -463,18 +451,17 @@ LAB ENABLE
   echo ""
   echo "Installing..."
   echo ""
-  execute SYSTEMDIR:Temp/BorderBlank_enable
+  execute PACKAGEDIR:Temp/BorderBlank_enable
   echo ""
   echo "Black Border support installed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
-  wait 2
+  wait 1
   SKIP STACK
 
 LAB DISABLE
 
   delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
-  wait 2
 
 LAB STACK
 
@@ -499,8 +486,6 @@ IF EXISTS SYSTEMDIR:Temp/StackAttack_enable
   echo ""
   echo "This option can be enabled/disabled at anytime via the"
   echo "Settings->Components menu."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP ANTICLICK
 EndIF
@@ -520,18 +505,17 @@ LAB ENABLE
   echo ""
   echo "Installing..."
   echo ""
-  execute SYSTEMDIR:Temp/StackAttack_enable
+  execute PACKAGEDIR:Temp/StackAttack_enable
   echo ""
   echo "StackAttack support installed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
-  wait 2
+  wait 1
   SKIP ANTICLICK
 
 LAB DISABLE
 
   delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
-  wait 2
  
 LAB ANTICLICK
 
@@ -556,8 +540,6 @@ IF EXISTS SYSTEMDIR:Temp/AntiClick_disable
   echo ""
   echo "This option can be enabled/disabled at anytime via the"
   echo "Settings->Components menu." 
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP FREEWHEEL
 EndIF
@@ -574,7 +556,6 @@ ENDIF
 LAB ENABLE
 
   delete >NIL: SYSTEMDIR:Temp/AntiClick_disable
-  wait 2
   SKIP FREEWHEEL
 
 LAB DISABLE
@@ -583,12 +564,12 @@ LAB DISABLE
   echo ""
   echo "Removing..."
   echo ""
-  execute SYSTEMDIR:Temp/AntiClick_disable
+  execute PACKAGEDIR:Temp/AntiClick_disable
   echo ""
   echo "AntiClick support removed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/AntiClick_disable
-  wait 2
+  wait 1
 
 LAB FREEWHEEL
 
@@ -613,8 +594,6 @@ IF EXISTS SYSTEMDIR:Temp/FreeWheel_disable
   echo ""
   echo "This option can be enabled/disabled at anytime via the"
   echo "Settings->Components menu."
-  echo ""
-  ask "Press RETURN to choose."
 ELSE
   SKIP END
 EndIF
@@ -631,7 +610,6 @@ ENDIF
 LAB ENABLE
 
   delete >NIL: SYSTEMDIR:Temp/FreeWheel_disable
-  wait 2
   SKIP END
 
 LAB DISABLE
@@ -640,16 +618,15 @@ LAB DISABLE
   echo ""
   echo "Removing..."
   echo ""
-  execute SYSTEMDIR:Temp/FreeWheel_disable
+  execute PACKAGEDIR:Temp/FreeWheel_disable
   echo ""
   echo "FreeWheel support removed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/FreeWheel_disable
-  wait 2
+  wait 1
 
 LAB END
 
-wait 2
 cls
 
 echo ""
