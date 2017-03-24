@@ -4,6 +4,8 @@
 
 ClassicWB FULL Package contains ClassicWB FULL v28 created by Bloodwych from EAB.
 
+ClassicWB FULL is a feature rich Workbench enhancement by Bloodwych targeted A1200 with 4MB memory expansion using 16 colour screenmode using PAL / NTSC / Non-Interlaced 640x256 display.
+
 With permission from Bloodwych it's been converted to a package for HstWB Installer.
 
 Original version of ClassicWB FULL can be downloaded from http://classicwb.abime.net/.
