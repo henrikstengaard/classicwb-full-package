@@ -10,9 +10,43 @@
 Add-Type -Assembly System.IO.Compression.FileSystem
 
 
+# paths
 $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
 $rootDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath("..")
-$packageDir = [System.IO.Path]::Combine($rootDir, "package")
+$packageDir = Join-Path -Path $rootDir -ChildPath "package"
+$screenshotsDir = Join-Path -Path $rootDir -ChildPath "screenshots"
+$readmeMarkdownFile = Join-Path -Path $rootDir -ChildPath "README.md"
+
+# get screenshot files
+$screenshotFiles = @()
+$screenshotFiles += Get-ChildItem -Path $screenshotsDir -Filter *.png
+
+# copy screenshot files, if any exist
+if ($screenshotFiles.Count -gt 0)
+{
+	Write-Host "Copying screenshots for package..." -ForegroundColor "Yellow"
+	$packageScreenshotsDir = Join-Path -Path $packageDir -ChildPath "screenshots"
+
+	if (!(Test-Path $packageScreenshotsDir))
+	{
+		mkdir $packageScreenshotsDir | Out-Null
+	}
+
+	$screenshotFiles | ForEach-Object { Copy-Item -Path $_.FullName -Destination $packageScreenshotsDir -Force }
+	Write-Host "Done." -ForegroundColor "Yellow"
+}
+
+
+# Build html
+Write-Host "Building readme html for package from readme markdown..." -ForegroundColor "Yellow"
+& ".\build_html.ps1" -markdownFile $readmeMarkdownFile -htmlFile (Join-Path -Path $packageDir -ChildPath "README.html")
+Write-Host "Done." -ForegroundColor "Yellow"
+
+
+# Build guide
+Write-Host "Building readme guide for package from readme markdown..." -ForegroundColor "Yellow"
+& ".\build_guide.ps1" -markdownFile $readmeMarkdownFile -guideFile (Join-Path -Path $packageDir -ChildPath "README.guide")
+Write-Host "Done." -ForegroundColor "Yellow"
 
 
 # c# code for forward slash encoder used to create zip files with forward slash as path separator in entries compatible with amiga
@@ -53,11 +87,11 @@ $packageVersion = ($packageIniLines | Where-Object { $_ -match '^Version' } | Se
 
 
 # write progress message
-Write-Host "Build package '$packageName' v$packageVersion"
+Write-Host "Build package '$packageName' v$packageVersion" -ForegroundColor "Yellow"
 
 
 # compress content directories to zip files
-$contentDirs = Get-ChildItem -Path $rootDir | Where-Object { $_.PSIsContainer -and $_.Name -notmatch '(package|tools|licenses)' }
+$contentDirs = Get-ChildItem -Path $rootDir | Where-Object { $_.PSIsContainer -and $_.Name -notmatch '(package|screenshots|tools|licenses)' }
 foreach ($contentDir in $contentDirs)
 {
 	# write progress message
@@ -78,10 +112,10 @@ foreach ($contentDir in $contentDirs)
 
 
 # write progress message
-Write-Host "Compressing package zip file..."
+Write-Host "Compressing package zip file..." -ForegroundColor "Yellow"
 
 # package file
-$packageFile = "{0}\{1}.{2}.zip" -f $rootDir, ($packageName -replace '\s', '.'), $packageVersion
+$packageFile = Join-Path -Path $rootDir -ChildPath ("{0}.{1}.zip" -f ($packageName -replace '\s', '.'), $packageVersion)
 
 # delete package file, if it exists
 if (test-path -path $packageFile)
@@ -94,4 +128,4 @@ if (test-path -path $packageFile)
 
 
 # write progress message
-Write-Host "Done."
+Write-Host "Done." -ForegroundColor "Yellow"

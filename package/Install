@@ -16,6 +16,19 @@
 ; - Adjusted text spacing.
 
 
+; Copy readme and screenshots to locale help for ClassicWB FULL
+IF NOT EXISTS SYSTEMDIR:Locale/Help/ClassicWB-FULL
+  makepath >NIL: SYSTEMDIR:Locale/Help/ClassicWB-FULL
+ENDIF
+copy >NIL: PACKAGEDIR:README SYSTEMDIR:Locale/Help/ClassicWB-FULL
+copy >NIL: PACKAGEDIR:README.guide SYSTEMDIR:Locale/Help/ClassicWB-FULL
+copy >NIL: PACKAGEDIR:README.info SYSTEMDIR:Locale/Help/ClassicWB-FULL
+IF NOT EXISTS SYSTEMDIR:Locale/Help/ClassicWB-FULL/screenshots
+  makepath >NIL: SYSTEMDIR:Locale/Help/ClassicWB-FULL/screenshots
+ENDIF
+copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-FULL/screenshots 
+
+
 ; Extract classicwb full v28 zip to systemdir
 echo "Installing ClassicWB FULL..." 
 unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
