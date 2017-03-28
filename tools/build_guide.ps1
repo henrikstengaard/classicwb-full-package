@@ -2,9 +2,19 @@
 # -----------
 #
 # Author: Henrik Nørfjand Stengaard
-# Date:   2017-03-26
+# Date:   2017-03-28
 #
 # A PowerShell script to build amiga guide from markdown.
+#
+# Following software is required for running this script.
+#
+# Image Magick:
+# http://www.imagemagick.org/script/binary-releases.php
+# http://www.imagemagick.org/download/binaries/ImageMagick-6.9.3-7-Q8-x64-dll.exe
+#
+# XnView with NConvert
+# http://www.xnview.com/en/xnview/#downloads
+# http://download3.xnview.com/XnView-win-full.exe
 
 
 Param(
@@ -159,6 +169,20 @@ $imageMagickConvertPath = "$env:ProgramFiles\ImageMagick-6.9.3-Q8\convert.exe"
 $tempFile = [System.IO.Path]::Combine($env:TEMP, "build_guide_" + [System.IO.Path]::GetRandomFileName())
 $guideDir = Split-Path $guideFile -Parent
 $guideFileName = Split-Path $guideFile -Leaf
+
+# fail, if XnView nconvert file doesn't exist
+if (!(Test-Path -path $nconvertPath))
+{
+	Write-Error "Error: XnView nconvert file '$nconvertPath' doesn't exist!"
+	exit 1
+}
+
+# fail, if Image Magick convert file doesn't exist
+if (!(Test-Path -path $imageMagickConvertPath))
+{
+	Write-Error "Error: Image Magick convert file '$imageMagickConvertPath' doesn't exist!"
+	exit 1
+}
 
 
 # convert images

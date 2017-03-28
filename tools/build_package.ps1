@@ -2,7 +2,7 @@
 # -------------
 #
 # Author: Henrik Nørfjand Stengaard
-# Date:   2017-01-02
+# Date:   2017-03-27
 #
 # A PowerShell script to build package for HstWB Installer.
 

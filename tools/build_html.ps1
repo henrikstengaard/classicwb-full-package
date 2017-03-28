@@ -2,9 +2,15 @@
 # ----------
 #
 # Author: Henrik Nørfjand Stengaard
-# Date:   2017-03-26
+# Date:   2017-03-28
 #
-# A PowerShell script to build html from markdown.
+# A PowerShell script to build html from markdown and embeds github styling.
+#
+# Following software is required for running this script.
+#
+# PanDoc:
+# https://github.com/jgm/pandoc/releases
+# https://github.com/jgm/pandoc/releases/download/1.19.2.1/pandoc-1.19.2.1-windows.msi
 
 
 Param(
