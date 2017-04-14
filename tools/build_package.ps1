@@ -2,7 +2,7 @@
 # -------------
 #
 # Author: Henrik Nørfjand Stengaard
-# Date:   2017-03-27
+# Date:   2017-04-14
 #
 # A PowerShell script to build package for HstWB Installer.
 
@@ -19,7 +19,12 @@ $readmeMarkdownFile = Join-Path -Path $rootDir -ChildPath "README.md"
 
 # get screenshot files
 $screenshotFiles = @()
-$screenshotFiles += Get-ChildItem -Path $screenshotsDir -Filter *.png
+
+if (Test-Path $screenshotsDir)
+{
+	$screenshotFiles += Get-ChildItem -Path $screenshotsDir -Filter *.png
+}
+
 
 # copy screenshot files, if any exist
 if ($screenshotFiles.Count -gt 0)
