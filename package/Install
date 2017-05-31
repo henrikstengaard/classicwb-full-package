@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2017-03-03
+; Date: 2017-05-31
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -33,6 +33,10 @@ copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-FULL/sc
 echo "Installing ClassicWB FULL..." 
 unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
 
+; Copy scsi device
+IF EXISTS DEVS:scsi.device
+  COPY >NIL: DEVS:scsi.device SYSTEMDIR:Devs
+ENDIF
 
 ; Install ClassicWB from S/Startup-Sequence
 ; FULL ADV ADVSP P96 
