@@ -10,6 +10,10 @@ With permission from Bloodwych it's been converted to a package for HstWB Instal
 
 Original version of ClassicWB FULL can be downloaded from http://classicwb.abime.net/.
 
+## Requirements
+
+ClassicWB FULL package can be installed on any Amiga with Workbench 3.1 and about 69MB free space on a harddrive for installation.
+
 ## Installation
 
 Download latest release from https://github.com/henrikstengaard/classicwb-full-package/releases and copy it to HstWB Installer "packages" directory, which typically is "c:\Program Files (x86)\HstWB Installer\Packages".
