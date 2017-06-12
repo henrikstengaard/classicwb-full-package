@@ -6,7 +6,7 @@ ClassicWB FULL is a feature rich Workbench enhancement by Bloodwych targeted A12
 
 ClassicWB FULL Package contains ClassicWB FULL v28 created by Bloodwych from EAB.
 
-With permission from Bloodwych it's been converted to a package for HstWB Installer.
+With permission from Bloodwych it has been converted to a package for HstWB Installer.
 
 Original version of ClassicWB FULL can be downloaded from http://classicwb.abime.net/.
 
