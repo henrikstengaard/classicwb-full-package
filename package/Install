@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2017-06-09
+; Date: 2019-07-03
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -14,6 +14,11 @@
 ; - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 ; - Removed and reduced waits.
 ; - Adjusted text spacing.
+; - Added support for Amiga OS 3.1.4:
+;   - Reinstalled MUI to fix Scalos prefs and iGame.
+;   - Patched Scalos title to 3.1.4.
+;   - Disabled PatchRAM TagLiFE BlazeWCP FBlit and IconBeFast optimizations.
+;   - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
 
 
 ; Copy readme and screenshots to locale help for ClassicWB FULL
@@ -48,9 +53,48 @@ ENDIF
 copy >NIL: PACKAGEDIR:screenshots/#?.iff SYSTEMDIR:Locale/Help/ClassicWB-FULL/screenshots 
 
 
+; detect amiga os version
+set amigaosversion ""
+IF EXISTS "SYSTEMDIR:Libs/workbench.library"
+  ; set amiga os version to 3.1.4, if workbench.library file is equal or greater than v45.194
+  Version >NIL: "SYSTEMDIR:Libs/workbench.library" 45 194 FILE
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.1.4"
+  ENDIF
+ELSE
+  ; set amiga os version to 3.1.4, if loaded workbench.library is equal or greater than v45.194
+  Version >NIL: "workbench.library" 45 194
+  IF $RC EQ 0 VAL
+    set amigaosversion "3.1.4"
+  ENDIF
+ENDIF
+
 ; Extract classicwb full v28 zip to systemdir
-echo "Installing ClassicWB FULL..." 
-unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
+echo "Installing ClassicWB FULL..."
+
+copy >NIL: SYSTEMDIR:S/Startup-Sequence SYSTEMDIR:S/Startup-Sequence.old
+
+IF "$amigaosversion" EQ "3.1.4"
+  unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR: -x *LoadModule *LoadResource *MakeLink *SetPatch *CDFileSystem *CrossDOSFileSystem *FastFileSystem *DANSK.crossdos *INTL.crossdos *MAC.crossdos *68040.library *asl.library *Icon.Library *lowlevel.library *nonvolatile.library *realtime.library
+  
+  ; reinstall mui to fix scalos prefs and igame
+  MakePath >NIL: "SYSTEMDIR:Temp/MUI"
+  lha -m1 -q x "PACKAGEDIR:mui38usr.lha" "SYSTEMDIR:Temp/MUI/"
+  Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
+  Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
+
+  ; patch scalos amiga os version workbench title
+  Copy >NIL: "PACKAGEDIR:Scalos.prefs" "SYSTEMDIR:Prefs/Env-Archive/Scalos"
+
+  ; disable optimizations
+  Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
+  Rename >NIL: SYSTEMDIR:C/TagLiFE SYSTEMDIR:C/TagLiFE_disabled
+  Rename >NIL: SYSTEMDIR:C/BlazeWCP SYSTEMDIR:C/BlazeWCP_disabled
+  Rename >NIL: SYSTEMDIR:System/FBlit/FBlit SYSTEMDIR:System/FBlit/FBlit_disabled
+  Rename >NIL: SYSTEMDIR:C/IconBeFast SYSTEMDIR:C/IconBeFast_disabled
+ELSE
+  unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
+ENDIF
 
 ; Copy scsi device
 IF EXISTS DEVS:scsi.device
@@ -59,10 +103,8 @@ ENDIF
 
 ; Install ClassicWB from S/Startup-Sequence
 ; FULL ADV ADVSP P96 
-copy SYSTEMDIR:T/Science SYSTEMDIR:S CLONE
-delete >NIL: SYSTEMDIR:T/Science
-delete >NIL: SYSTEMDIR:S/startup-sequence
-rename SYSTEMDIR:S/Science SYSTEMDIR:S/Startup-Sequence
+
+Copy >NIL: PACKAGEDIR:Startup-Sequence SYSTEMDIR:S/Startup-Sequence
 
 IF EXISTS SYSTEMDIR:C/LoadWB.temp
   copy >NIL: SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
@@ -391,6 +433,10 @@ LAB DISABLE
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
 
 LAB COPPER
+
+IF "$amigaosversion" EQ "3.1.4"
+  SKIP ANTICLICK
+ENDIF
 
 IF EXISTS SYSTEMDIR:C/Copper_enable
   cls

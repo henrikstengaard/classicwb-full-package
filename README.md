@@ -12,7 +12,7 @@ Original version of ClassicWB FULL can be downloaded from http://classicwb.abime
 
 ## Requirements
 
-ClassicWB FULL package can be installed on any Amiga with Workbench 3.1 and about 69MB free space on a harddrive for installation.
+ClassicWB FULL package can be installed on any Amiga with Amiga OS 3.1 or 3.1.4 and about 69MB free space on a harddrive for installation.
 
 ## Installation
 
@@ -41,6 +41,12 @@ The install script for HstWB Installer is based on S/Startup-Sequence from Class
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
+- Added support for Amiga OS 3.1.4:
+  - Reinstalled MUI to fix Scalos prefs and iGame.
+  - Patched Scalos title to 3.1.4.
+  - Disabled PatchRAM TagLiFE BlazeWCP FBlit and IconBeFast optimizations.
+  - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
+
 
 ## Screenshots
 
