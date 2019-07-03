@@ -356,7 +356,7 @@ LAB RETRO
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
     Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
-  ELSE
+  ENDIF
 
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
 
@@ -393,7 +393,7 @@ LAB REGEN
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
     Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
-  ELSE
+  ENDIF
 
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
 
@@ -446,7 +446,7 @@ LAB ENABLE
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
     Copy >NIL: "PACKAGEDIR:Scalos.prefs.oldicons" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
-  ELSE
+  ENDIF
 
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
 
