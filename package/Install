@@ -103,7 +103,11 @@ ENDIF
 ; Install ClassicWB from S/Startup-Sequence
 ; FULL ADV ADVSP P96 
 
-Copy >NIL: PACKAGEDIR:Startup-Sequence SYSTEMDIR:S/Startup-Sequence
+IF "$amigaosversion" EQ "3.1.4"
+  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
+ELSE
+  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1 SYSTEMDIR:S/Startup-Sequence
+ENDIF
 
 IF EXISTS SYSTEMDIR:C/LoadWB.temp
   copy >NIL: SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
