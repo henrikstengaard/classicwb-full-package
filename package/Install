@@ -16,8 +16,10 @@
 ; - Adjusted text spacing.
 ; - Added support for Amiga OS 3.1.4:
 ;   - Reinstalled MUI to fix Scalos prefs and iGame.
-;   - Patched Scalos title to 3.1.4.
+;   - Patched Scalos title to 3.1.4 for no theme, Oldicons, Retro and ReGen themes.
 ;   - Disabled PatchRAM TagLiFE BlazeWCP FBlit and IconBeFast optimizations.
+;   - Skips AGA Copper, BorderBlank and StackAttack options during installation.
+;   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
 ;   - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
 
 
@@ -82,9 +84,6 @@ IF "$amigaosversion" EQ "3.1.4"
   lha -m1 -q x "PACKAGEDIR:mui38usr.lha" "SYSTEMDIR:Temp/MUI/"
   Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
-
-  ; patch scalos amiga os version workbench title
-  Copy >NIL: "PACKAGEDIR:Scalos.prefs" "SYSTEMDIR:Prefs/Env-Archive/Scalos"
 
   ; disable optimizations
   Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
@@ -314,6 +313,11 @@ ENDIF
 
 LAB NONE
 
+  ; patch scalos title, if amiga os version is 3.1.4
+  IF "$amigaosversion" EQ "3.1.4"
+    Copy >NIL: "PACKAGEDIR:Scalos.prefs.none" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+  ENDIF
+
   delete >NIL: SYSTEMDIR:Temp/retro.zip
   delete >NIL: SYSTEMDIR:Temp/regen.zip
   delete >NIL: SYSTEMDIR:Temp/default.zip
@@ -348,7 +352,14 @@ LAB RETRO
   delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
   delete >NIL: SYSTEMDIR:Temp/optimized.zip
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+
+  ; patch scalos title, if amiga os version is 3.1.4
+  IF "$amigaosversion" EQ "3.1.4"
+    Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+  ELSE
+
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+
   wait 1
   SKIP OLDICONS
 
@@ -378,7 +389,14 @@ LAB REGEN
   delete >NIL: SYSTEMDIR:Temp/defaultretro.zip
   delete >NIL: SYSTEMDIR:Temp/optimized.zip
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+
+  ; patch scalos title, if amiga os version is 3.1.4
+  IF "$amigaosversion" EQ "3.1.4"
+    Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+  ELSE
+
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+
   wait 1
 
 LAB OLDICONS
@@ -424,7 +442,14 @@ LAB ENABLE
   echo "OldIcon support installed."
   echo ""
   delete >NIL: SYSTEMDIR:Temp/oldicons.zip
+
+  ; patch scalos title, if amiga os version is 3.1.4
+  IF "$amigaosversion" EQ "3.1.4"
+    Copy >NIL: "PACKAGEDIR:Scalos.prefs.oldicons" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+  ELSE
+
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
+
   wait 1
   SKIP COPPER
 
@@ -434,7 +459,11 @@ LAB DISABLE
 
 LAB COPPER
 
+; skip copper, border blank and stack attack, if amiga os version is 3.1.4
 IF "$amigaosversion" EQ "3.1.4"
+  delete >NIL: SYSTEMDIR:Temp/Copper_enable
+  delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
+  delete >NIL: SYSTEMDIR:Temp/StackAttack_enable
   SKIP ANTICLICK
 ENDIF
 
