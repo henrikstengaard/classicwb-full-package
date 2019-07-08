@@ -118,6 +118,8 @@ ENDIF
 ; Install ClassicWB from S/Startup-Sequence
 ; FULL ADV ADVSP P96
 
+delete >NIL: SYSTEMDIR:T/Science
+
 IF EXISTS SYSTEMDIR:C/LoadWB.temp
   copy >NIL: SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
   delete >NIL: SYSTEMDIR:C/LoadWB.temp
