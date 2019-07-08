@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-07-04
+; Date: 2019-07-08
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -73,9 +73,8 @@ ENDIF
 ; Extract classicwb full v28 zip to systemdir
 echo "Installing ClassicWB FULL..."
 
-copy >NIL: SYSTEMDIR:S/Startup-Sequence SYSTEMDIR:S/Startup-Sequence.old
-
 IF "$amigaosversion" EQ "3.1.4"
+  ; extract classicwb full excluding files conflicting with amiga os 3.1.4
   unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR: -x *LoadModule *LoadResource *MakeLink *SetPatch *CDFileSystem *CrossDOSFileSystem *FastFileSystem *DANSK.crossdos *INTL.crossdos *MAC.crossdos *68040.library *asl.library *Icon.Library *lowlevel.library *nonvolatile.library *realtime.library
   
   ; reinstall mui to fix scalos prefs and igame
@@ -85,13 +84,30 @@ IF "$amigaosversion" EQ "3.1.4"
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
 
   ; disable optimizations
-  Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
-  Rename >NIL: SYSTEMDIR:C/TagLiFE SYSTEMDIR:C/TagLiFE_disabled
-  Rename >NIL: SYSTEMDIR:C/BlazeWCP SYSTEMDIR:C/BlazeWCP_disabled
-  Rename >NIL: SYSTEMDIR:System/FBlit/FBlit SYSTEMDIR:System/FBlit/FBlit_disabled
-  Rename >NIL: SYSTEMDIR:C/IconBeFast SYSTEMDIR:C/IconBeFast_disabled
+  IF EXISTS SYSTEMDIR:C/PatchRAM
+    Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
+  ENDIF
+  IF EXISTS SYSTEMDIR:C/TagLiFE
+    Rename >NIL: SYSTEMDIR:C/TagLiFE SYSTEMDIR:C/TagLiFE_disabled
+  ENDIF
+  IF EXISTS SYSTEMDIR:C/BlazeWCP
+    Rename >NIL: SYSTEMDIR:C/BlazeWCP SYSTEMDIR:C/BlazeWCP_disabled
+  ENDIF
+  IF EXISTS SYSTEMDIR:System/FBlit/FBlit
+    Rename >NIL: SYSTEMDIR:System/FBlit/FBlit SYSTEMDIR:System/FBlit/FBlit_disabled
+  ENDIF
+  IF EXISTS SYSTEMDIR:C/IconBeFast
+    Rename >NIL: SYSTEMDIR:C/IconBeFast SYSTEMDIR:C/IconBeFast_disabled
+  ENDIF
+
+  ; copy startup-sequence for amiga os 3.1.4
+  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
 ELSE
+  ; extract classicwb full
   unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
+
+  ; copy startup-sequence for amiga os 3.1
+  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1 SYSTEMDIR:S/Startup-Sequence
 ENDIF
 
 ; Copy scsi device
@@ -100,13 +116,7 @@ IF EXISTS DEVS:scsi.device
 ENDIF
 
 ; Install ClassicWB from S/Startup-Sequence
-; FULL ADV ADVSP P96 
-
-IF "$amigaosversion" EQ "3.1.4"
-  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
-ELSE
-  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1 SYSTEMDIR:S/Startup-Sequence
-ENDIF
+; FULL ADV ADVSP P96
 
 IF EXISTS SYSTEMDIR:C/LoadWB.temp
   copy >NIL: SYSTEMDIR:C/LoadWB.temp SYSTEMDIR:C/LoadWB
