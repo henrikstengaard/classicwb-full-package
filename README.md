@@ -53,7 +53,9 @@ The install script for HstWB Installer is based on S/Startup-Sequence from Class
 
 Screenshots of ClassicWB FULL from http://classicwb.abime.net/classicweb/full.htm.
 
-![ClassicWB FULL 3.1.4](screenshots/classicwb_full_3.1.4.png?raw=true)
+![ClassicWB FULL 3.1.4 1](screenshots/classicwb_full_3.1.4_1.png?raw=true)
+
+![ClassicWB FULL 3.1.4 2](screenshots/classicwb_full_3.1.4_2.png?raw=true)
 
 ![ClassicWB FULL 1](screenshots/classicwb_full1.png?raw=true)
 
