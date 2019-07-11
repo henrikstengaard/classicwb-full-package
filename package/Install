@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-07-08
+; Date: 2019-07-11
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -259,7 +259,7 @@ LAB OPTIMIZED
   echo ""
   echo "Installing..."
   echo ""
-  unzip >NIL: -o SYSTEMDIR:Temp/palette.zip -d SYS:
+  unzip >NIL: -o SYSTEMDIR:Temp/palette.zip -d SYSTEMDIR:
   echo ""
   echo "Optimized Palette installed."
   echo ""
@@ -275,7 +275,7 @@ LAB HICOLOUR
   echo ""
   echo "Installing..."
   echo ""
-  unzip >NIL: -o SYSTEMDIR:Temp/hicolour.zip -d SYS:
+  unzip >NIL: -o SYSTEMDIR:Temp/hicolour.zip -d SYSTEMDIR:
   echo ""
   echo "High Colour Palette installed."
   echo ""
@@ -347,18 +347,18 @@ LAB RETRO
   echo ""
   echo "Installing..."
   echo ""
-  unzip >NIL: -o SYSTEMDIR:Temp/retro.zip -d SYS:
+  unzip >NIL: -o SYSTEMDIR:Temp/retro.zip -d SYSTEMDIR:
   echo ""
   echo "Retro Theme installed."
   echo ""
   IF $default EQ 1
-    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYSTEMDIR:
   EndIF
   IF $default EQ 2
-    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYSTEMDIR:
   EndIF
   IF $default EQ 3
-    unzip >NIL: -o SYSTEMDIR:Temp/defaultretro.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/defaultretro.zip -d SYSTEMDIR:
   EndIF
   delete >NIL: SYSTEMDIR:Temp/retro.zip
   delete >NIL: SYSTEMDIR:Temp/regen.zip
@@ -384,18 +384,18 @@ LAB REGEN
   echo ""
   echo "Installing..."
   echo ""
-  unzip >NIL: -o SYSTEMDIR:Temp/regen.zip -d SYS:
+  unzip >NIL: -o SYSTEMDIR:Temp/regen.zip -d SYSTEMDIR:
   echo ""
   echo "Re-Gen Theme installed."
   echo "" 
   IF $default EQ 1
-    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/default.zip -d SYSTEMDIR:
   EndIF
   IF $default EQ 2
-    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/optimized.zip -d SYSTEMDIR:
   EndIF
   IF $default EQ 3
-    unzip >NIL: -o SYSTEMDIR:Temp/defaultregen.zip -d SYS:
+    unzip >NIL: -o SYSTEMDIR:Temp/defaultregen.zip -d SYSTEMDIR:
   EndIF
   delete >NIL: SYSTEMDIR:Temp/retro.zip
   delete >NIL: SYSTEMDIR:Temp/regen.zip
@@ -452,7 +452,7 @@ LAB ENABLE
   echo ""
   echo "Installing..."
   echo ""
-  unzip >NIL: -o SYSTEMDIR:Temp/oldicons.zip -d SYS:
+  unzip >NIL: -o SYSTEMDIR:Temp/oldicons.zip -d SYSTEMDIR:
   echo ""
   echo "OldIcon support installed."
   echo ""
@@ -534,7 +534,7 @@ LAB DISABLE
 
 LAB BORDER
 
-IF EXISTS SYS:Temp/BorderBlank_enable
+IF EXISTS SYSTEMDIR:Temp/BorderBlank_enable
   cls
   echo ""
   echo ""
