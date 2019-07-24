@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-07-11
+; Date: 2019-07-24
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -17,9 +17,9 @@
 ; - Added support for Amiga OS 3.1.4:
 ;   - Reinstalled MUI to fix Scalos prefs and iGame.
 ;   - Patched Scalos title to 3.1.4 for no theme, Oldicons, Retro and ReGen themes.
-;   - Disabled PatchRAM TagLiFE BlazeWCP FBlit and IconBeFast optimizations.
 ;   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
 ;   - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
+;   - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
 
 
 ; Copy readme and screenshots to locale help for ClassicWB FULL
@@ -83,25 +83,13 @@ IF "$amigaosversion" EQ "3.1.4"
   Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
 
-  ; disable optimizations
-  IF EXISTS SYSTEMDIR:C/PatchRAM
-    Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
-  ENDIF
-  IF EXISTS SYSTEMDIR:C/TagLiFE
-    Rename >NIL: SYSTEMDIR:C/TagLiFE SYSTEMDIR:C/TagLiFE_disabled
-  ENDIF
-  IF EXISTS SYSTEMDIR:C/BlazeWCP
-    Rename >NIL: SYSTEMDIR:C/BlazeWCP SYSTEMDIR:C/BlazeWCP_disabled
-  ENDIF
-  IF EXISTS SYSTEMDIR:System/FBlit/FBlit
-    Rename >NIL: SYSTEMDIR:System/FBlit/FBlit SYSTEMDIR:System/FBlit/FBlit_disabled
-  ENDIF
-  IF EXISTS SYSTEMDIR:C/IconBeFast
-    Rename >NIL: SYSTEMDIR:C/IconBeFast SYSTEMDIR:C/IconBeFast_disabled
-  ENDIF
-
   ; copy startup-sequence for amiga os 3.1.4
   Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
+
+  ; install patch amiga os 3.1.4.1, if it exists
+  IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
+    Execute "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141" SYS SYSTEMDIR QUIET
+  ENDIF
 ELSE
   ; extract classicwb full
   unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
