@@ -17,10 +17,10 @@
 ; - Added support for Amiga OS 3.1.4:
 ;   - Reinstalled MUI to fix Scalos prefs and iGame.
 ;   - Patched Scalos title to 3.1.4 for no theme, Oldicons, Retro and ReGen themes.
-;   - Option to disable Scalos to fix NewIcons shown garbled or distorted. This replaces Scalos with following:
-;     - Added Full Palette for better colors in icons.
-;     - Added Tools Daemon for added options in Workbench top menu.
-;     - Added Magic Menu for right click menu in Wokrbench.
+;   - Disable Scalos option to fix NewIcons shown garbled or distorted, which will add following as a replacement for Scalos:
+;     - Full Palette for better colors in icons.
+;     - Tools Daemon for added options in Workbench top menu.
+;     - Magic Menu for right click menu in Wokrbench.
 ;   - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
 ;   - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
 ;   - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
