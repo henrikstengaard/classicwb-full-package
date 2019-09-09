@@ -1,0 +1,12 @@
+IF EXISTS SYS:Storage/Startup/MagicMenu
+  Copy SYS:Storage/Startup/MagicMenu SYS:WBStartup
+  Copy SYS:Storage/Startup/MagicMenu.info SYS:WBStartup
+  Delete >NIL: SYS:Storage/Startup/MagicMenu
+  Delete >NIL: SYS:Storage/Startup/MagicMenu.info
+  Echo ""
+  Echo "MagicMenu is now enabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - MagicMenu is already enabled"
+EndIF
+Wait 1

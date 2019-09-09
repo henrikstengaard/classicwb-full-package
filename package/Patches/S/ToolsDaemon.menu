@@ -1,0 +1,59 @@
+TITLE RUN ->
+	ITEM [1] Dopus
+	(WB) A-Programs:Diropus4/DirectoryOpus
+	ITEM [2] Shell
+	(WB) SYS:System/Shell
+	ITEMBAR
+	ITEM [3] AGLaunch
+	(WB) SYS:System/AGLaunch/AG-Launch
+	ITEM [4] Games
+	(WB) SYS:System/BMenu/LBench/GamesMenu
+	ITEM [5] Demos
+	(WB) SYS:System/BMenu/LBench/DemosMenu
+	ITEM [6] Other
+	(WB) SYS:System/BMenu/LBench/OtherMenu
+TITLE Software
+	ITEM Programs
+	(WB) SYS:System/BMenu/Programs
+	ITEM Utils
+	(WB) SYS:System/BMenu/Utils
+	ITEM Music
+	(WB) SYS:System/BMenu/Music
+TITLE Workbench
+	ITEM Disk
+	(WB) SYS:System/BMenu/Disk
+	ITEM System
+	(WB) SYS:System/BMenu/System
+	ITEM Settings
+	(WB) SYS:System/BMenu/Settings
+	ITEMBAR
+	ITEM Prefs
+	(WB) SYS:System/BMenu/Menus/Prefs
+	ITEM Startup
+	(WB) SYS:System/BMenu/Menus/Startup
+TITLE Actions
+	ITEM Search
+	(WB) A-Programs:Find/SimpleFind []
+	ITEM Browse
+	(WB) A-Programs:DirOpus4/DirectoryOpus []
+	ITEMBAR
+	ITEM Play
+	(CLI) 8192 A-Programs:HippoPlayer/HippoPlayer []
+	ITEM Edit
+		SUB Text
+		(WB) A-Programs:JanoEditor/JanoEditor []
+		SUB Hex
+		(WB) A-Programs:FileX/FileX []
+	ITEM View
+		SUB MultiView
+		(WB) SYS:Utilities/MultiView []
+		SUB Visage
+		(WB) SYS:Utilities/Visage []
+	ITEMBAR
+	ITEM Unarchive
+	(WB) A-Programs:PackMast/PackMast []
+	ITEM Dir->Shell
+	(WB) SYS:C/OpenShell []
+	ITEM Zip->Temp
+	(CLI) 8192 Zip -r A-Temp:Rename []
+END

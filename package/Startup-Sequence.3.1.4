@@ -123,6 +123,9 @@ EndIF
 
 C:AddDataTypes REFRESH QUIET
 C:IPrefs
+IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  SYS:System/FPalette/FPPrefs
+ENDIF
 C:ConClip
 
 Path >NIL: RAM: C: SYS:Utilities SYS:Rexxc SYS:System S: SYS:Prefs SYS:WBStartup SYS:Tools SYS:Tools/Commodities

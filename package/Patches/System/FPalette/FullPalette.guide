@@ -1,0 +1,480 @@
+@database FullPalette_eng.guide
+@rem $VER: FullPalette_eng.guide 1.1 (9.5.99) by Massimo Tantignone
+@width 72
+@wordwrap
+
+
+@node MAIN "FullPalette documentation"
+
+
+             @{b}FullPalette 40.22 (9.5.99) by Massimo Tantignone@{ub}
+
+
+ @{" Overview           " link OVERVIEW}
+
+ @{" Requirements       " link REQUIREMENTS}
+ @{" The installation   " link INSTALLATION}
+ @{" The usage          " link USAGE} @{bg fill}@{fg filltext} New! @{bg back}@{fg text}
+ @{" Notes              " link NOTES}
+
+ @{" Last words         " link CONCLUSION}
+
+ @{" Program history    " link PROGHISTORY} @{bg fill}@{fg filltext} New! @{bg back}@{fg text}
+ @{" Author information " link AUTHORINFO}
+
+@endnode
+
+@node OVERVIEW "What is FullPalette?"
+
+   OVERVIEW
+   ========
+
+   The FullPalette system allows you to edit and save ALL the 256 Workbench
+colors rather than just eight of them as the standard Palette editor does.
+
+   It features a preferences editor ("FullPalette") enabling to define the
+colors, and a patch running in the background ("FPPrefs") which takes care
+of applying the palette settings every time the Workbench screen is opened.
+
+   You can decide exactly which colors are to be "locked", and thus never
+modified by programs running on the Workbench screen, and which colors
+instead are to be left "free" for IPrefs and other applications.
+
+   This (among other advantages) makes the managing of icons much easier;
+using FullPalette you can, for example, have icons with any number of
+colors without risking to see some of them change just because you view
+a picture with MultiView on the Workbench screen.
+   You could also set colors 4-7 to always be the same as colors 252-255.
+
+   FullPalette also has a button strip to easily perform editing actions
+such as "Copy", "Swap" or "Spread".
+
+   For the purpose of editing the Workbench palette, FullPalette can
+completely replace the standard "Palette" preferences editor, whose settings
+file (palette.prefs) it continues to maintain for compatibility, although
+FullPalette also uses a custom file.
+
+   The patch runs alongside IPrefs without any conflicts.
+
+@endnode
+
+@node REQUIREMENTS "Requirements"
+
+   REQUIREMENTS
+   ============
+
+   · An Amiga or Amiga-compatible computer
+   · AmigaOS 3.0+
+
+   A Workbench screen with at least 16 colors is not really a requirement,
+but gives some meaning to the usage of FullPalette :-)
+
+@endnode
+
+@node INSTALLATION "How to install FullPalette"
+
+   INSTALLATION
+   ============
+
+   Installing FullPalette is very simple; just use the supplied installation
+script.
+
+   If you want to install it by hand, you only have to do three things:
+
+   1) Copy the FPPrefs program into a directory that is in the system path
+      (for example C:)
+
+   2) Insert into your Startup-sequence, IMMEDIATELY AFTER IPREFS, the
+      following line:
+
+      FPPrefs
+
+   3) Copy the FullPalette editor (with its icon) into the Prefs drawer
+      of your Workbench partition.
+
+   Now you can reboot to activate the patch, then play with the editor to
+edit and save the Workbench palette according to your preferences.
+   The Workbench screen will use your palette each time it (re)opens itself.
+
+   Note: you CAN'T call FPPrefs from the User-startup; if you do, some images
+(especially backgrounds) on the Workbench screen could be rendered with
+the wrong colors.
+
+@endnode
+
+@node USAGE "How to use FullPalette"
+
+   USAGE
+   =====
+
+   The FullPalette system is made up of two programs: the FullPalette editor,
+which you use to define and save your preferences, and the FPPrefs "daemon",
+constantly running in the background, which actually applies the preferences
+to the Workbench screen.
+
+   The usage of both is fairly straightforward, however they offer some
+special features which you might want to know about.
+
+   @{" General information    " link GENERALINFO} @{bg fill}@{fg filltext} New! @{bg back}@{fg text}
+   @{" Behavior when starting " link STARTBEHAV}
+   @{" The color mode         " link COLORMODE}
+   @{" Color copying          " link COLORCOPYING}
+   @{" Loading a palette      " link LOADPALETTE}
+
+@endnode
+
+@node GENERALINFO "General information on the usage of FullPalette"
+
+   General usage information
+   -------------------------
+
+   Once you have the FPPrefs patch running in the background you can use
+the FullPalette editor to define your palette.
+
+   To edit the entire palette of the Workbench screen, you should first open
+it with the maximum number of colors available (256 for AGA and graphic
+cards, 16 for ECS).
+
+   This way, you can edit all colors; then, each time the Workbench screen
+will open at less than its maximum depth, only some of the colors will be
+used.
+
+   The FullPalette GUI is very intuitive. You have some gadgets to perform
+actions like "Copy" or "Spread" at the top of the window; below them is
+a palette gadget for choosing the palette entry to edit, and a cycle gadget
+used to specify if the current color is to be "Free" or "Locked".
+
+@{bg fill}@{fg filltext} New! @{bg back}@{fg text} You can also lock or free @{b}all@{ub} colors at once by pressing the space bar:
+each time you do so the state of the colors is reversed. Note that this
+doesn't affect the first 4 and last 4 colors, which must always be locked.
+
+   There are also two text indicators with the logical and physical number of
+the current color. The logical number ("Screen color") is the color index in
+the current screen's palette, whereas the physical number ("Palette color")
+always refers to the color index in the full 256-color palette.
+
+   Three sliders allow you to modify the Red, Green and Blue components of
+the current color, and the gadgets at the bottom of the window give you
+the option to Save, Use or Cancel the current settings.
+
+   You can use some tool types in FullPalette's icon (or keywords on the
+command line):
+
+   SCREEN           switch which tells FullPalette to open on a custom screen
+   FONTNAME=<name>  name of the font for the editor window
+   FONTSIZE=<size>  size of the font for the editor window
+   WINDOW=<x,y,w,h> initial position and size of the editor window
+   REDBITS=<num>    number of bits used to represent red (1-8, 0=auto)
+   GREENBITS=<num>  number of bits used to represent green (1-8, 0=auto)
+   BLUEBITS=<num>   number of bits used to represent blue (1-8, 0=auto)
+
+   Furthermore, the editor recognizes the usual preferences tool types,
+such as EDIT, SAVE, USE and CREATEICONS=<YES|NO>.
+
+   Starting with version 40.14, FullPalette allows you to choose the
+precision of the color remapping for Workbench backdrop images.
+   You can select the wanted precision within the menu "Options"; if you
+choose "Ignore", FullPalette won't interfere with the remapping at all.
+   Note that any change takes effect only when the Workbench screen is
+reopened.
+
+@endnode
+
+@node STARTBEHAV "Behavior when starting"
+
+   Behavior when starting
+   ----------------------
+
+   By default, the FPPrefs daemon immediately sets the Workbench colors to
+your preferences when it starts. At boot time, this has the side effect of
+opening the Workbench screen if it isn't already open.
+   You can tell it to wait until the Workbench screen (re)opens itself by
+setting the environment variable "ENV:FullPalette/Action".
+
+   With the command "SetEnv FullPalette/Action IMMEDIATE" you tell
+FPPrefs to immediately set the colors when it is launched, thus opening
+the Workbench screen if it isn't already open. This is the default.
+
+   With the command "SetEnv FullPalette/Action DEFERRED" you tell
+FPPrefs to wait until the Workbench screen opens by itself before
+setting the colors.
+
+   Once you have set the variable, make sure you copy it to ENVARC: with,
+for instance, the command "Copy ENV:FullPalette/#? ENVARC:FullPalette"
+(the ENVARC:FullPalette directory must be created first).
+
+   Note: the "deferred" behavior is experimental, normally it works well but
+it seems that once in a while it can lock up the screen at boot time. If
+this happens, just do a manual reset (CTRL-Amiga-Amiga).
+   If it happens too often on your machine, return to the default behavior
+(immediate) by deleting the environment variable.
+
+@endnode
+
+@node COLORMODE "The color mode"
+
+   The color mode
+   --------------
+
+   You can set the environment variable "ENV:FullPalette/ColorMode" to choose
+how FullPalette should remap the full (physical) 256-color palette to
+the current (logical) color palette of the Workbench screen, if it has less
+than 256 colors.
+
+   With the command "SetEnv FullPalette/ColorMode WORKBENCH" you tell
+FullPalette to set the current palette's first half to the colors at the
+beginning of the full 256-color palette, and the second half to the colors
+at the end. In other words, a 32-color Workbench screen will get its first
+16 colors from the first 16 colors of the 256-color palette, and its second
+16 colors from the LAST 16 colors of the 256-color palette.
+
+   With the command "SetEnv FullPalette/ColorMode LINEAR" you tell
+FullPalette to set the current palette to the first colors of the 256-color
+palette, except for the last 4 color which will be always taken from the
+end of the 256-color palette.
+   This way, a 32-color Workbench screen will get its first 28 colors from
+the first 28 colors of the 256-color palette, and its last 4 colors from
+the last 4 colors of the 256-color palette.
+
+   Either way, this is compatible with IPrefs, which uses the notorious
+"first 4/last 4" color scheme.
+
+   Once you have set the variable, make sure you copy it to ENVARC: with,
+for instance, the command "Copy ENV:FullPalette/#? ENVARC:FullPalette"
+(the ENVARC:FullPalette directory must be created first).
+
+@endnode
+
+@node COLORCOPYING "Color copying"
+
+   Color copying
+   -------------
+
+   Although it isn't really necessary (you could do it by hand), starting
+with version 40.18 FullPalette offers the automatic copying of the last
+four colors in the palette to the second four colors (colors 4-7). To
+achieve this, just set the environment variable "FullPalette/CopyColors" to
+"TRUE".
+   You can do it with the command "Echo > ENVARC:FullPalette/CopyColors TRUE"
+(the ENVARC:FullPalette directory must be created first).
+
+   This variable is read at launch time only, so for it to take effect you
+must first reboot your Amiga; furthermore, the copying takes place only for
+those of the destination colors (4-7) which are "Locked".
+   Note: in this mode, the settings for colors 4-7 shown in the FullPalette
+editor are ignored.
+
+@endnode
+
+@node LOADPALETTE "Loading a palette from a picture file"
+
+   Loading a palette
+   -----------------
+
+   Starting with version 40.21 FullPalette allows you to load the palette
+of a picture file. Selecting the "Load Palette..." item in the Edit menu
+will bring up a file requester which you can use to choose the picture
+whose palette you want to load.
+
+   You can load any picture format you have a datatype for; for instance, you
+could load an old 2.x palette.ilbm preferences file.
+
+   If the picture has a different number of colors than the current screen,
+they will be remapped according to the state of the @{"FullPalette/ColorMode" link COLORMODE}
+environment variable.
+
+   Note that loading a palette preserves the pen locking settings.
+
+@endnode
+
+@node NOTES "Notes"
+
+   NOTES
+   =====
+
+   At the moment FullPalette doesn't have a color wheel, and probably it
+never will, as it would be impossible to allocate all the necessary pens
+for it from the same palette the wheel would be used to modify.
+   From my personal experience, however, the color wheel is rather useless
+in an application like this one (a palette editor for the Workbench screen).
+
+   Furthermore, at the moment it also lacks an HSB mode as an alternative
+to the RGB one; if I'll receive enough requests, I'll implement it for sure.
+
+   Important: if the cycle gadget of the editor says "Free", this does NOT
+mean that the selected color is @{u}currently@{uu} free, but just that it will
+never be locked by FullPalette or FPPrefs!
+   However, it's possibile to know which pens are currently free or
+allocated: by pressing any SHIFT key while selecting (with a mouse click)
+a palette color, if the corresponding pen is allocated you'll see the
+screen flash.
+
+@endnode
+
+@node PROGHISTORY "The history of FullPalette"
+
+   THE HISTORY OF FULLPALETTE
+   ==========================
+
+   @{b}40.22@{ub}    Bug-fixes:
+
+            · Finally, the color of the editor's palette indicator changes
+              in real-time also on hicolor and truecolor screenmodes.
+              However, in order to avoid excessive flashing, the smaller
+              color box in the palette gadget itself is only updated when
+              the slider is released.
+
+            · Added a workaround for a bug in WordPerfect which caused the
+              program's requesters not to be displayed with FPPrefs running.
+
+            · The installation procedure is a bit smarter about where to
+              place the "FPPrefs" command in the Startup-sequence. Also, it
+              now works even if it finds "FastIPrefs" rather than "IPrefs".
+
+            New:
+
+            · The FPPrefs program is now self-detaching. This means that you
+              don't need to put "Run > NIL:" before it anymore.
+
+            · By pressing the spacebar, is now possible to lock or free all
+              colors at once in the FullPalette editor.
+
+            · FullPalette and FPPrefs don't have any dependence on the
+              "palette.prefs" file anymore, so if you haven't any other use
+              for it (like non-default GUI pens settings), you can delete it.
+              However, FullPalette still updates the file if it's present.
+
+   @{b}40.21@{ub}    Bug-fixes:
+
+            · Now FPPrefs always releases all pens it locked when it is
+              terminated with CTRL-C or by running it a second time.
+
+            · The documentation now mentions the WINDOW tool type, which
+              has always been available.
+
+            New:
+
+            · The FullPalette editor is now able to load the palette from
+              any picture file you have a datatype for.
+
+            · Three new tool types enabling you to specify how many bits
+              must be used to represent the red, green and blue components
+              in the editor's sliders.
+
+            · The editor's window has now a custom backfill hook filling
+              it with the background pen, rather than color 0 (useful to
+              people changing the background pen with VisualPrefs).
+
+            · At last, an installation script has been included.
+
+            · Now the documentation is in AmigaGuide format.
+
+   @{b}40.20@{ub}    Special version found in some beta VisualPrefs archives.
+
+   @{b}40.19@{ub}    Some bug-fixes:
+
+            · Fixed a bug in the editor, wasn't always leaving enough
+              space for the slider level numbers (again :-).
+
+            · Now lock-ups of the Workbench screen at boot time should
+              happen much less frequently, if ever.
+
+   @{b}40.18@{ub}    Bug-fixes:
+
+            · Added a workaround for a bug in the V39 gadtools.library
+              concerning the displaying of the contents of the color number
+              indicators. Hope it works!
+
+            · The "Options->WBPattern remapping" menu is now correctly
+              updated when you select "Last saved" from the "Edit" menu.
+
+            New:
+
+            · Added "Ignore" to the pattern remapping options.
+
+            · A new environment variable now allows to have automatic
+              copying of the last four palette colors to colors 4-7.
+
+   @{b}40.17@{ub}    Bug-fix:
+
+            · Fixed a bug in the editor, wasn't always leaving enough
+              space for the slider level numbers.
+
+            New:
+
+            · Added the (still experimental) ability to defer the setting
+              of colors at boot time, thus avoiding an unwanted opening of
+              the Workbench screen.
+
+   @{b}40.16@{ub}    Bumped revision to 16 for the Aminet release
+
+   @{b}40.15@{ub}    Bug-fix:
+
+            · There was a bug in the italian .catalog file.
+
+            New:
+
+            · Now the editor allocates the needed stack by itself.
+
+   @{b}40.14@{ub}    Bug-fix:
+
+            · Now FPPrefs should work better with NewIcons.
+
+            New:
+
+            · Added (experimental) option for choosing the precision
+              of the Workbench pattern remapping. Let me know if it works!
+
+   @{b}40.13@{ub}    Some bug-fixes:
+
+            · Now FPPrefs doesn't change a palette entry if it wasn't
+              saved as "Locked".
+
+            · Now FPPrefs does nothing when OpenWorkBench() is called with
+              the Workbench screen already open.
+
+            · The FullPalette editor now saves and loads only the colors
+              which are "Locked".
+
+   @{b}40.12@{ub}    First public beta release
+
+@endnode
+
+@node CONCLUSION "Last words"
+
+   LAST WORDS
+   ==========
+
+   I have been using FullPalette on my system for some years now, and it never
+gave me any trouble. However, this doesn't necessarily mean it is bug-free.
+   So, if you should encounter any problem with FullPalette, don't hesitate
+to contact me.
+
+   For any comment, suggestion or bug report about FullPalette, write to:
+
+   Massimo Tantignone
+   Via Campagnoli, 4
+   28100 Novara (NO)
+   ITALY
+
+   E-mail: tanti@intercom.it
+
+   I can't guarantee an immediate reply to everyone, but I'll certainly
+read all of your messages.
+
+@endnode
+
+@node AUTHORINFO "Some information about the author of FullPalette"
+
+   AUTHOR INFORMATION
+   ==================
+
+   Massimo Tantignone
+   Via Campagnoli, 4
+   28100 Novara (NO)
+   ITALY
+
+   E-mail: tanti@intercom.it
+   WWW:    http://www.intercom.it/~amigaws
+
+@endnode

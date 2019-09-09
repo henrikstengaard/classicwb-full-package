@@ -1,0 +1,12 @@
+IF EXISTS SYS:WBStartup/MagicMenu
+  Copy SYS:WBStartup/MagicMenu SYS:Storage/Startup
+  Copy SYS:WBStartup/MagicMenu.info SYS:Storage/Startup
+  Delete >NIL: SYS:WBStartup/MagicMenu
+  Delete >NIL: SYS:WBStartup/MagicMenu.info
+  Echo ""
+  Echo "MagicMenu is now disabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - MagicMenu is already disabled"
+EndIF
+Wait 1

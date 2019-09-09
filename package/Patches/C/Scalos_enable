@@ -1,0 +1,10 @@
+IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  Copy >NIL: C:LoadWB.Scalos C:LoadWB
+  Delete >NIL: SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  Echo ""
+  Echo "Scalos is now enabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - Scalos is already enabled"
+EndIF
+Wait 1

@@ -1,0 +1,12 @@
+IF EXISTS SYS:Storage/Startup/ToolsDaemon
+  Copy SYS:Storage/Startup/ToolsDaemon SYS:WBStartup
+  Copy SYS:Storage/Startup/ToolsDaemon.info SYS:WBStartup
+  Delete >NIL: SYS:Storage/Startup/ToolsDaemon
+  Delete >NIL: SYS:Storage/Startup/ToolsDaemon.info
+  Echo ""
+  Echo "ToolsDaemon is now enabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - ToolsDaemon is already enabled"
+EndIF
+Wait 1

@@ -1,0 +1,10 @@
+IF NOT EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  Copy >NIL: C:LoadWB.AmigaOS C:LoadWB
+  Echo "" NOLINE >SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  Echo ""
+  Echo "Scalos is now disabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - Scalos is already disabled"
+EndIF
+Wait 1

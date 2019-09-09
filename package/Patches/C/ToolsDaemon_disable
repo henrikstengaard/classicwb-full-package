@@ -1,0 +1,12 @@
+IF EXISTS SYS:WBStartup/ToolsDaemon
+  Copy SYS:WBStartup/ToolsDaemon SYS:Storage/Startup
+  Copy SYS:WBStartup/ToolsDaemon.info SYS:Storage/Startup
+  Delete >NIL: SYS:WBStartup/ToolsDaemon
+  Delete >NIL: SYS:WBStartup/ToolsDaemon.info
+  Echo ""
+  Echo "ToolsDaemon is now disabled - please reboot"
+ELSE
+  Echo ""
+  Echo "ERROR - ToolsDaemon is already disabled"
+EndIF
+Wait 1
