@@ -379,6 +379,9 @@ LAB NONE
     Copy >NIL: "PACKAGEDIR:Scalos.prefs.none" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
   ENDIF
 
+  Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
+  Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.retro
+
   delete >NIL: SYSTEMDIR:Temp/retro.zip
   delete >NIL: SYSTEMDIR:Temp/regen.zip
   delete >NIL: SYSTEMDIR:Temp/default.zip
@@ -419,6 +422,7 @@ LAB RETRO
     Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
 
     Copy >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.retro SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs CLONE
+    Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
     Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.retro
   ENDIF
 
@@ -460,6 +464,7 @@ LAB REGEN
 
     Copy >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs CLONE
     Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
+    Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.retro
   ENDIF
 
   Copy >NIL: SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
