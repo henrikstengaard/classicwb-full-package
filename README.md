@@ -43,6 +43,7 @@ The install script for HstWB Installer is based on S/Startup-Sequence from Class
 - Adjusted text spacing.
 - Added support for Amiga OS 3.1.4:
   - Reinstalled MUI to fix Scalos prefs and iGame.
+  - Disabled PatchRAM, StackAttack, FBlit and FText.
   - Patched Scalos title to 3.1.4 for no theme, Oldicons, Retro and ReGen themes.
   - Disable Scalos option to fix NewIcons shown garbled or distorted, which will add following as a replacement for Scalos:
     - Full Palette for better colors in icons.

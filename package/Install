@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-09-09
+; Date: 2019-09-11
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -16,6 +16,7 @@
 ; - Adjusted text spacing.
 ; - Added support for Amiga OS 3.1.4:
 ;   - Reinstalled MUI to fix Scalos prefs and iGame.
+;   - Disabled PatchRAM, StackAttack, FBlit and FText.
 ;   - Patched Scalos title to 3.1.4 for no theme, Oldicons, Retro and ReGen themes.
 ;   - Disable Scalos option to fix NewIcons shown garbled or distorted, which will add following as a replacement for Scalos:
 ;     - Full Palette for better colors in icons.
@@ -97,6 +98,22 @@ IF "$amigaosversion" EQ "3.1.4"
   IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
     Execute "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141" SYS SYSTEMDIR QUIET
   ENDIF
+
+  ; disable patchram, if it exists
+  IF EXISTS SYSTEMDIR:C/PatchRAM
+    Rename >NIL: SYSTEMDIR:C/PatchRAM SYSTEMDIR:C/PatchRAM_disabled
+  ENDIF
+
+  ; disable fblit, if it exists
+  IF EXISTS SYSTEMDIR:System/FBlit/FBlit
+    Rename SYSTEMDIR:System/FBlit/FBlit SYSTEMDIR:System/FBlit/FBlit_disabled
+    Copy SYSTEMDIR:Prefs/Env-Archive/Newicons.prefs SYSTEMDIR:Prefs/Presets/NewiconsRTG.prefs
+    Copy SYSTEMDIR:Prefs/Presets/Newicons.prefs SYSTEMDIR:Prefs/Env-Archive/Newicons.prefs
+    IF EXISTS SYSTEMDIR:Prefs/Env-Archive/FBlit.cfg
+      Copy SYSTEMDIR:Prefs/Env-Archive/FBlit.cfg SYSTEMDIR:System/FBlit/FBlit.cfg
+      Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/FBlit.cfg
+    ENDIF
+  ENDIF
 ELSE
   ; extract classicwb full
   unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
@@ -164,7 +181,7 @@ ENDIF
 ; --------------
 LAB disablescalos
 
-set disablescalos `RequestChoice "Disable Scalos" "Amiga OS 3.1.4 doesn't work well with Scalos showing*NNewIcons like WHDLoad slaves.*N*NDo you want to disable Scalos?" "Help|Yes|No"`
+set disablescalos `RequestChoice "Disable Scalos" "Amiga OS 3.1.4 doesn't work well with Scalos showing*NNewIcons, which are used for eg. WHDLoad*Nslave icons.*N*NDo you want to disable Scalos?" "Help|Yes|No"`
 
 ; help option
 IF "$disablescalos" EQ 1 VAL 
@@ -639,6 +656,11 @@ LAB DISABLE
   delete >NIL: SYSTEMDIR:Temp/BorderBlank_enable
 
 LAB STACK
+
+; skip to anticlick, if amiga os version is 3.1.4 as stackattack is not needed for amiga os 3.1.4
+IF "$amigaosversion" EQ "3.1.4"
+  SKIP ANTICLICK
+ENDIF
 
 IF EXISTS SYSTEMDIR:Temp/StackAttack_enable
   cls
