@@ -2,7 +2,7 @@
 ; -----------------------------------------
 ;
 ; Author: Henrik Noerfjand Stengaard 
-; Date: 2019-09-11
+; Date: 2019-09-12
 ;
 ; This script extracts and installs ClassicWB FULL v28 created by Bloodwych from EAB.
 ; With permission from Bloodwych it's been converted to a package for HstWB Installer.
@@ -87,12 +87,12 @@ IF "$amigaosversion" EQ "3.1.4"
 
   ; reinstall mui to fix scalos prefs and igame
   MakePath >NIL: "SYSTEMDIR:Temp/MUI"
-  lha -m1 -q x "PACKAGEDIR:mui38usr.lha" "SYSTEMDIR:Temp/MUI/"
+  lha -m1 -q x "PACKAGEDIR:Patches/mui38usr.lha" "SYSTEMDIR:Temp/MUI/"
   Copy >NIL: "SYSTEMDIR:Temp/MUI/MUI/#?" "SYSTEMDIR:System/MUI/" CLONE ALL
   Delete >NIL: "SYSTEMDIR:Temp/MUI/" ALL
 
   ; copy startup-sequence for amiga os 3.1.4
-  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
+  Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.1.4 SYSTEMDIR:S/Startup-Sequence
 
   ; install patch amiga os 3.1.4.1, if it exists
   IF EXISTS "SYSTEMDIR:S/Install-Patch-Amiga-OS-3141"
@@ -119,12 +119,11 @@ ELSE
   unzip -qq -o -x PACKAGEDIR:classicwb_full_v28.zip -d SYSTEMDIR:
 
   ; copy startup-sequence for amiga os 3.1
-  Copy >NIL: PACKAGEDIR:Startup-Sequence.3.1 SYSTEMDIR:S/Startup-Sequence
+  Copy >NIL: PACKAGEDIR:Patches/Startup-Sequence.3.1 SYSTEMDIR:S/Startup-Sequence
 ENDIF
 
-; copy classicwb patches to systemdir
-Copy >NIL: PACKAGEDIR:Patches/#? SYSTEMDIR: ALL
-
+; copy scalos patches to systemdir
+Copy >NIL: PACKAGEDIR:Patches/Scalos/#? SYSTEMDIR: ALL
 
 ; Copy scsi device
 IF EXISTS DEVS:scsi.device
@@ -161,7 +160,6 @@ IF EXISTS SYSTEMDIR:System/IconLib/S/Startup-Sequence30
   copy SYSTEMDIR:System/IconLib/S/Startup-Sequence30 SYSTEMDIR:System/IconLib/S/Startup-Sequence CLONE
 ENDIF
 
-
 LAB OPTIONS
 
 cd SYSTEMDIR:
@@ -170,7 +168,6 @@ copy >NIL: SYSTEMDIR:Prefs/Env-Archive RAM:ENV ALL NOREQ
 Assign >NIL: ENV: RAM:ENV
 Protect FONTS:#? +RWED ALL QUIET
 SYSTEMDIR:System/FixFonts
-
 
 ; skip to igame, if amiga os is not 3.1.4
 IF NOT "$amigaosversion" EQ "3.1.4"
@@ -181,37 +178,34 @@ ENDIF
 ; --------------
 LAB disablescalos
 
-set disablescalos `RequestChoice "Disable Scalos" "Amiga OS 3.1.4 doesn't work well with Scalos showing*NNewIcons, which are used for eg. WHDLoad*Nslave icons.*N*NDo you want to disable Scalos?" "Help|Yes|No"`
+set disablescalos `RequestChoice "Scalos Disabled" "Scalos is disabled when installing ClassicWB with*NAmiga OS 3.1.4 as it displays garbled or distorted*NNewIcons.*N*NClick 'Help' for more information or click 'OK'*Nto continue installation." "Help|OK"`
 
 ; help option
 IF "$disablescalos" EQ 1 VAL 
-  IF EXISTS "PACKAGEDIR:Help/Disable-Scalos.txt"
-    Lister "PACKAGEDIR:Help/Disable-Scalos.txt" >NIL:
+  IF EXISTS "PACKAGEDIR:Help/Scalos-Disabled.txt"
+    Lister "PACKAGEDIR:Help/Scalos-Disabled.txt" >NIL:
   ELSE
-    echo "*e[1mError: Help file 'PACKAGEDIR:Help/Disable-Scalos.txt' doesn't exist!*e[0m"
+    echo "*e[1mError: Help file 'PACKAGEDIR:Help/Scalos-Disabled.txt' doesn't exist!*e[0m"
     quit 20
   ENDIF
   SKIP BACK disablescalos
 ENDIF
 
-; yes option
-IF "$disablescalos" EQ 2 VAL
-  ; disable scalos
-  Copy >NIL: "SYSTEMDIR:C/LoadWB.AmigaOS" "SYSTEMDIR:C/LoadWB"
-  Echo "" NOLINE >SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos_disabled
+; disable scalos
+Copy >NIL: "SYSTEMDIR:C/LoadWB.AmigaOS" "SYSTEMDIR:C/LoadWB"
+Echo "" NOLINE >SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos_disabled
 
-  ; enable magic menu
-  Copy >NIL: SYSTEMDIR:Storage/Startup/MagicMenu SYSTEMDIR:WBStartup
-  Copy >NIL: SYSTEMDIR:Storage/Startup/MagicMenu.info SYSTEMDIR:WBStartup
-  Delete >NIL: SYSTEMDIR:Storage/Startup/MagicMenu
-  Delete >NIL: SYSTEMDIR:Storage/Startup/MagicMenu.info
+; enable magic menu
+Copy >NIL: SYSTEMDIR:Storage/Startup/MagicMenu SYSTEMDIR:WBStartup
+Copy >NIL: SYSTEMDIR:Storage/Startup/MagicMenu.info SYSTEMDIR:WBStartup
+Delete >NIL: SYSTEMDIR:Storage/Startup/MagicMenu
+Delete >NIL: SYSTEMDIR:Storage/Startup/MagicMenu.info
 
-  ; enable tools daemon
-  Copy >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon SYSTEMDIR:WBStartup
-  Copy >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon.info SYSTEMDIR:WBStartup
-  Delete >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon
-  Delete >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon.info
-ENDIF
+; enable tools daemon
+Copy >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon SYSTEMDIR:WBStartup
+Copy >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon.info SYSTEMDIR:WBStartup
+Delete >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon
+Delete >NIL: SYSTEMDIR:Storage/Startup/ToolsDaemon.info
 
 
 LAB IGAME
@@ -393,7 +387,7 @@ LAB NONE
 
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
-    Copy >NIL: "PACKAGEDIR:Scalos.prefs.none" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+    Copy >NIL: "PACKAGEDIR:Patches/Scalos.prefs.none" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
   ENDIF
 
   Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
@@ -436,7 +430,7 @@ LAB RETRO
 
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
-    Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+    Copy >NIL: "PACKAGEDIR:Patches/Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
 
     Copy >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.retro SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs CLONE
     Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
@@ -477,7 +471,7 @@ LAB REGEN
 
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
-    Copy >NIL: "PACKAGEDIR:Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+    Copy >NIL: "PACKAGEDIR:Patches/Scalos.prefs.theme" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
 
     Copy >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs CLONE
     Delete >NIL: SYSTEMDIR:Prefs/Env-Archive/Sys/WBPattern.prefs.regen
@@ -534,7 +528,7 @@ LAB ENABLE
 
   ; patch scalos title, if amiga os version is 3.1.4
   IF "$amigaosversion" EQ "3.1.4"
-    Copy >NIL: "PACKAGEDIR:Scalos.prefs.oldicons" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
+    Copy >NIL: "PACKAGEDIR:Patches/Scalos.prefs.oldicons" "SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs"
   ENDIF
 
   copy SYSTEMDIR:Prefs/Env-Archive/Scalos/Scalos.prefs SYSTEMDIR:MyFiles/Install/Icons/Enable/Prefs/Env-Archive/Scalos/Scalos.prefs CLONE
