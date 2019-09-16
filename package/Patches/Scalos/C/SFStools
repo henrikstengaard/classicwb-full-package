@@ -1,0 +1,3 @@
+OpenDrawer SYS:System/SFS/Shell
+SYS:System/SFS/Shell
+NewShell KCON:/50//220/SFS-Tools/CLOSE S:ShellStack
