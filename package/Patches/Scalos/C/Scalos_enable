@@ -1,7 +1,9 @@
 IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
   Copy >NIL: C:LoadWB.Scalos C:LoadWB
   Delete >NIL: SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
-  Echo ""
+	Execute >NIL: C:MagicMenu_disable
+	Execute >NIL: C:ToolsDaemon_disable
+	Echo ""
   Echo "Scalos is now enabled - please reboot"
 ELSE
   Echo ""

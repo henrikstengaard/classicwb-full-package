@@ -1,6 +1,8 @@
 IF NOT EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
   Copy >NIL: C:LoadWB.AmigaOS C:LoadWB
   Echo "" NOLINE >SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+	Execute >NIL: C:MagicMenu_enable
+	Execute >NIL: C:ToolsDaemon_enable
   Echo ""
   Echo "Scalos is now disabled - please reboot"
 ELSE
