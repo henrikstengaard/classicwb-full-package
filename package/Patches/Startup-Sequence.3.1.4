@@ -125,6 +125,9 @@ C:AddDataTypes REFRESH QUIET
 C:IPrefs
 IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
   SYS:System/FPalette/FPPrefs
+  IF EXISTS SYS:Prefs/Env-Archive/Sys/def_ram.info
+    Copy >NIL: SYS:Prefs/Env-Archive/Sys/def_ram.info RAM:Disk.info
+  ENDIF
 ENDIF
 C:ConClip
 
