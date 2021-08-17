@@ -1,0 +1,149 @@
+;ClassicWB Startup-Sequence
+;--------------------------
+;FULL ADV ADVSP UAE
+;Amiga OS 3.2
+
+; Execute Amiga OS 3.2 startup, if it exists
+IF EXISTS "S:Amiga-OS-32-Startup"
+  Execute "S:Amiga-OS-32-Startup"
+ENDIF
+
+
+; set failat to 21
+FailAt 21
+
+If Exists C:LoadModule
+  ; load scsi.device, if it exists
+  IF EXISTS DEVS:scsi.device
+    ; load scsi.device, if current scsi.device is less than v43.45
+    Version >NIL: "scsi.device" 43 45
+    IF WARN
+      C:LoadModule DEVS:scsi.device
+    ENDIF
+  ENDIF
+EndIf
+
+C:GetMouseInput LOCAL
+
+IF $MouseInput EQ 1
+  Unset MouseInput
+  C:SetPatch QUIET
+  C:Assign >NIL: ENV: RAM:
+  C:Assign >NIL: T: RAM:
+  C:Execute S:Maxmem-Sequence
+  EndCLI >NIL:
+EndIF
+
+IF $MouseInput EQ 2
+  Unset MouseInput
+  C:Execute S:Bootmenu-Sequence
+  EndCLI >NIL:
+EndIF
+
+Unset MouseInput
+
+C:SetPatch QUIET
+
+IF EXISTS C:StackAttack
+  C:StackAttack
+EndIF
+
+C:Version >NIL:
+
+IF EXISTS SYS:WBstartupD
+  C:Rename >NIL: SYS:WBStartup SYS:WBStartupM
+  C:Rename >NIL: SYS:WBStartupD SYS:WBStartup
+EndIF
+
+Resident >NIL: C:IconX PURE
+Resident >NIL: C:WBRun PURE
+Resident >NIL: C:Assign PURE
+Resident >NIL: C:Execute PURE
+
+IF EXISTS L:env-handler
+  C:MakeDir RAM:T RAM:Clipboards
+  L:env-handler
+  C:Copy >NIL: ENVARC:Sys/def_kick.info ENV:Sys/def_kick.info
+ELSE
+  C:MakeDir RAM:T RAM:Clipboards RAM:ENV RAM:ENV/Sys
+  C:Copy >NIL: ENVARC: RAM:ENV ALL NOREQ
+  Assign >NIL: ENV: RAM:ENV
+EndIF
+
+IF EXISTS C:PatchRAM
+  C:PatchRAM
+EndIF
+
+IF EXISTS C:TagLiFE
+  C:TagLiFE
+EndIF
+
+Assign >NIL: T: RAM:T
+Assign >NIL: CLIPS: RAM:Clipboards
+Assign >NIL: REXX: S:
+Assign >NIL: PRINTERS: DEVS:Printers
+Assign >NIL: KEYMAPS: DEVS:Keymaps
+Assign >NIL: LOCALE: SYS:Locale
+Assign >NIL: LIBS: SYS:Classes ADD
+Assign >NIL: HELP: LOCALE:Help DEFER
+
+IF NOT EXISTS SYS:Fonts
+  Assign FONTS:
+EndIF
+
+IF EXISTS C:BlazeWCP
+  C:BlazeWCP
+EndIF
+
+IF EXISTS SYS:System/FBlit/FBlit
+  SYS:System/FBlit/FBlit
+  SYS:System/FBlit/FText
+EndIF
+
+BindDrivers
+C:Mount >NIL: DEVS:DOSDrivers/~(#?.info)
+
+IF EXISTS DEVS:Monitors
+  IF EXISTS DEVS:Monitors/VGAOnly
+    DEVS:Monitors/VGAOnly
+  EndIF
+
+  C:List >NIL: DEVS:Monitors/~(#?.info|VGAOnly) TO T:M LFORMAT "DEVS:Monitors/%s"
+  Execute T:M
+  C:Delete >NIL: T:M
+EndIF
+
+SetEnv Workbench $Workbench
+SetEnv Kickstart $Kickstart
+UnSet Workbench
+UnSet Kickstart
+
+IF EXISTS C:IconBeFast
+  C:IconBeFast 0
+EndIF
+
+C:AddDataTypes REFRESH QUIET
+C:IPrefs
+IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  SYS:System/FPalette/FPPrefs
+  IF EXISTS SYS:Prefs/Env-Archive/Sys/def_ram.info
+    Copy >NIL: SYS:Prefs/Env-Archive/Sys/def_ram.info RAM:Disk.info
+  ENDIF
+ENDIF
+C:ConClip
+
+Path >NIL: RAM: C: SYS:Utilities SYS:Rexxc SYS:System S: SYS:Prefs SYS:WBStartup SYS:Tools SYS:Tools/Commodities
+
+IF EXISTS S:User-Startup
+  Execute S:User-Startup
+EndIF
+
+Resident Execute REMOVE
+Resident Assign REMOVE
+
+IF EXISTS C:StackAttack
+  C:StackAttack AUTO
+EndIF
+
+C:LoadWB
+EndCLI >NIL:
