@@ -1,0 +1,23 @@
+; Boot Patches Startup
+; --------------------
+
+IF EXISTS C:PatchRAM
+  C:PatchRAM
+EndIF
+
+IF EXISTS C:TagLiFE
+  C:TagLiFE
+EndIF
+ 
+IF EXISTS C:BlazeWCP
+  C:BlazeWCP
+EndIF
+
+IF EXISTS SYS:System/FBlit/FBlit
+  SYS:System/FBlit/FBlit
+  SYS:System/FBlit/FText
+EndIF
+
+IF EXISTS C:IconBeFast
+  C:IconBeFast 0
+EndIF

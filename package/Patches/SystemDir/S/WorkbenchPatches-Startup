@@ -1,0 +1,68 @@
+;ClassicWB User-Startup
+;----------------------
+;FULL ADV ADVSP
+
+IF EXISTS SYS:Prefs/Env-Archive/Scalos/Scalos_disabled
+  SYS:System/FPalette/FPPrefs
+  IF Not Exists RAM:Disk.info
+    IF EXISTS SYS:Prefs/Env-Archive/Sys/def_ram.info
+      Copy >NIL: SYS:Prefs/Env-Archive/Sys/def_ram.info RAM:Disk.info
+    ENDIF
+  ENDIF
+ENDIF
+
+IF EXISTS C:AntiClick
+  C:AntiClick
+EndIF
+
+Execute S:Assign-Startup
+
+Assign >NIL: Scalos: SYS:System/Scalos
+
+Assign >NIL: LAUNCH: SYS:System/BMenu/Files
+Assign >NIL: JPEGTMP: SYS:T
+Assign >NIL: AWEB_APL: A-Programs:AWeb_APL
+
+;BEGIN MUI
+IF EXISTS SYS:System/MUI
+   Assign >NIL: MUI: SYS:System/MUI
+   IF EXISTS MUI:Libs
+      Assign >NIL: ADD LIBS: MUI:Libs
+   EndIF
+   IF EXISTS MUI:Locale
+      Assign >NIL: ADD LOCALE: MUI:Locale
+   EndIF
+   C:Version >NIL: exec.library 39
+   IF NOT WARN
+      IF EXISTS MUI:Docs
+         IF EXISTS HELP:dummy
+         EndIF
+         Assign >NIL: ADD HELP: MUI:Docs
+      EndIF
+   EndIF
+EndIF
+;END MUI
+
+C:Mount KCON: from DEVS:KingCON-mountlist
+C:Mount KRAW: from DEVS:KingCON-mountlist
+
+FailAt 21
+SYS:System/Rexxmast >NIL:
+
+C:xfdPatch >NIL:
+
+Run >NIL: C:XpkMasterPrefs
+
+C:CAPrefs >NIL:
+
+IF EXISTS C:BorderBlank
+  C:BorderBlank
+EndIF
+
+IF EXISTS C:StickyRMB
+  Run >NIL: C:StickyRMB
+EndIF
+
+IF EXISTS C:StackAttack
+  C:StackAttack AUTO
+EndIF
