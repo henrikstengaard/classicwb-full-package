@@ -41,6 +41,11 @@ The install script for HstWB Installer is based on S/Startup-Sequence from Class
 - Removed all "press enter to continue" expect last one used after installation complete message is shown.
 - Removed and reduced waits.
 - Adjusted text spacing.
+- Creates backup of startup sequence as "S:Startup-Sequence.BAK".
+- Creates backup of user startup as "S:User-Startup.BAK". 
+- Creates backup of original ClassicWB FULL startup sequence as "S:Startup-Sequence.CWB".
+- Creates backup of original ClassicWB FULL user startup as "S:User-Startup.CWB". 
+- Patch startup sequence and user startup with ClassicWB FULL changes for best Amiga OS compatibility with existing and future versions.
 - Added support for Amiga OS 3.2 and 3.1.4:
   - Reinstalled MUI to fix Scalos prefs and iGame.
   - Disabled PatchRAM, StackAttack, FBlit and FText.
@@ -49,22 +54,23 @@ The install script for HstWB Installer is based on S/Startup-Sequence from Class
     - Full Palette for better colors in icons.
     - Tools Daemon for added options in Workbench top menu.
     - Magic Menu for right click menu in Wokrbench.
-  - Added LoadModule ROMUPDATE to support Kickstart 3.1 being patched to 3.1.4.
-  - Added version checking of DEVS:scsi.device, so it only will be loaded if scsi.device in memory/resident is less than v43.45.
-  - Added install patch Amiga OS 3.1.4.1, if Amiga OS 3.1.4.1 update is installed.
   - Disabled Copper, BorderBlank, StackAttack.
 
 ## Screenshots
 
-Screenshots of ClassicWB FULL from http://classicwb.abime.net/classicweb/full.htm.
+Screenshots of ClassicWB FULL installed with Amiga OS 3.2.
 
 ![ClassicWB FULL 3.2 1](screenshots/classicwb_full_3.2_1.png?raw=true)
 
 ![ClassicWB FULL 3.2 2](screenshots/classicwb_full_3.2_2.png?raw=true)
 
+Screenshots of ClassicWB FULL installed with Amiga OS 3.1.4.
+
 ![ClassicWB FULL 3.1.4 1](screenshots/classicwb_full_3.1.4_1.png?raw=true)
 
 ![ClassicWB FULL 3.1.4 2](screenshots/classicwb_full_3.1.4_2.png?raw=true)
+
+Screenshots of ClassicWB FULL from http://classicwb.abime.net/classicweb/full.htm.
 
 ![ClassicWB FULL 1](screenshots/classicwb_full1.png?raw=true)
 
